@@ -1,0 +1,63 @@
+html{
+    background-color: #322C2C;
+}
+.bg-new-dark {
+    background-color: #322C2C !important;
+}
+body {
+    background-color: #322C2C !important;
+}
+#footer{
+    position:relative;
+    top:80vh;
+    left:90vw;
+}
+.circle{
+    background-color:red;
+    border-radius:25%;
+    margin: 0 0.5rem 0 0.5rem;
+}
+#shortcuts{
+    width:4rem;
+}
+.thing-container{
+}
+.thing {
+    height: 300px;
+    width: 300px;
+    background-color: blue;
+    border: 1px solid red;
+}
+.carousel {
+   scroll-snap-type:x mandatory;
+   scroll-padding: 0 24px;
+   overflow:auto;
+}
+.container {
+    display: flex;
+    overflow: auto;
+    flex: none;
+    flex-flow: row nowrap;
+    background-color: inherit;
+    scroll-snap-type: x proximity;
+}
+.item {
+    background-color: #322C2C !important;
+    font-size: 64px;
+    margin: 0 1rem 0 1rem;
+    background-color: aliceblue;
+    scroll-snap-align: center;
+    flex: none;  
+}
+.card{
+    border:#000000 !important;
+}
+.shortcuts_buttons
+{
+    position:fixed;
+    top:90%;
+    left:85%
+}
+.dead{
+    min-height:5vh;
+}
