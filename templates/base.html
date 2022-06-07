@@ -4,6 +4,7 @@
     {% block head %}
     <link rel="stylesheet" href="{{url_for('static', filename="css/styles.css")}}" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/8e8a0aa5cf.js" crossorigin="anonymous"></script>
     <title>{% block title %}{% endblock %}</title>
     {% endblock %}
 </head>
@@ -12,9 +13,21 @@
     <div class="dead">asd</div>
     <div class="shortcuts_buttons">
         <div class="row">
-            <div class="col-4"> <a class="btn btn-info" href="https://www.linkedin.com/in/george-buleandra-2a742713b/" target="_blank">LKDN</a></div>
-            <div class="col-4"> <a class="btn btn-warning" href="{{url_for("view_cv")}}" target="_blank"> CV</a></div>
-            <div class="col-4"> <a class="btn btn-danger">EMAIL</a></div>
+            <div class="col-4">
+                <a class="btn btn-info" href="https://www.linkedin.com/in/george-buleandra-2a742713b/" target="_blank">
+                    <i class="fa-brands fa-linkedin"></i>
+                </a>
+            </div>
+            <div class="col-4">
+                <a class="btn btn-warning" href="{{url_for("view_cv")}}" target="_blank">
+                    <i class="fa-solid fa-file-certificate"></i>
+                </a>
+            </div>
+            <div class="col-4"> 
+                <a class="btn btn-danger">
+                    <i class="fa-solid fa-envelope"></i>
+                </a>
+            </div>
         </div>
     </div>
     <div class="container-fluid px-5 mt-5">
@@ -36,6 +49,7 @@
     </div>
           -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+
     {% block extra_js %}
     {% endblock %}
 
