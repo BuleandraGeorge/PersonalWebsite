@@ -3,9 +3,21 @@
 {% block title %} Lading Page {% endblock %}
 {% block content %}
 <div class="row mb-5">
-    <div class="col-lg-4"><img src="{{url_for('static', filename='images/student.jpg')}}" class=" img-thumbnail" alt="..."></div>
-    <div class="col-lg-4"><img src="{{url_for('static', filename='images/developer.jpg')}}" class="img-thumbnail" alt="..."></div>
-    <div class="col-lg-4 "><img src="{{url_for('static', filename='images/dreamer.jpg')}}" class="img-thumbnail h-100" alt="..."></div>
+    <div class="col-lg-4">
+        <a href="{{url_for('student')}}">
+            <img src="{{url_for('static', filename='images/student.jpg')}}" class=" img-thumbnail" alt="...">
+        </a>
+    </div>
+    <div class="col-lg-4">
+        <a href="{{url_for('developer')}}">
+            <img src="{{url_for('static', filename='images/developer.jpg')}}" class="img-thumbnail" alt="...">
+        </a>
+    </div>
+    <div class="col-lg-4 ">
+        <a href="{{url_for('dreamer')}}">
+            <img src="{{url_for('static', filename='images/dreamer.jpg')}}" class="img-thumbnail h-100" alt="...">
+        </a>
+    </div>
 </div>
 
 <p class=" fs-1 text-center text-light my-5">Work</p>
