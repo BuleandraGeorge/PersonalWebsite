@@ -4,14 +4,14 @@ from flask.helpers import url_for
 from flask_pymongo import PyMongo
 import os
 app = Flask(__name__)
-"""
-app.config["MONGO_URI"] = "mongodb+srv://george:tKlOrnl7yoyzwkQw@all.nmpma.mongodb.net/?retryWrites=true&w=majority"
+
+app.config["MONGO_URI"] = "mongodb+srv://george:tKlOrnl7yoyzwkQw@all.nmpma.mongodb.net/All?retryWrites=true&w=majority"
 app.config["MONGO_DBNAME"] = 'personal_details'
 mongo = PyMongo(app)
-"""
+database = mongo.db
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", projects=database.projects.find() )
 
 @app.route("/student")
 def student():
