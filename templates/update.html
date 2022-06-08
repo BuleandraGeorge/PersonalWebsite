@@ -2,8 +2,34 @@
 
 {% block content %}
 
-<h1>Initial Commit</h1>
-<form action="{{url_for("index")}}">
+<h1>Developer Page</h1>
+<hr />
+<h2>Project</h2>
+<form class="card">
+    <div class="card-body bg-dark text-white rounded">
+        <h5 class="card-title text-center">Project</h5>
+        <div class="form-group ">
+            <label for="project_name">Project Name</label>
+            <input type="text" class="form-control" id="project_name" placeholder="Enter the name of the project">
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" id="description" placeholder="Description of the project" rows="6"></textarea>
+        </div>
+        <div class="form-group" id="features_inputs">
+            <label for="features">Features</label>
+            <input type="text"  class="form-control mb-2" placeholder="Add features" id="features">
+            <div class="d-flex justify-content-between mb-2" id="features_buttons">
+                <a id="add" class="btn btn-primary"><i class="fa-solid fa-plus"></i></a>
+                <a id="del" class="btn btn-danger"><i class="fa-solid fa-minus"></i></a>
+            </div>
 
+        </div>
+       
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+    
+    
 </form>
+<script src="{{url_for('static', filename='/js/add_del_logic.js')}}"></script>
 {% endblock %}
