@@ -29,3 +29,7 @@ def dreamer():
 def view_cv():
     path = "./static/docs/"
     return send_from_directory(path, 'cv_pdf.pdf')
+
+@app.route("/project")
+def project_view():
+    return render_template("project.html");

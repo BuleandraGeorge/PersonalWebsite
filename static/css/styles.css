@@ -56,7 +56,8 @@ body {
 {
     position:fixed;
     top:90%;
-    left:85%
+    left:85%;
+    z-index:1;
 }
 .dead{
     min-height:5vh;
