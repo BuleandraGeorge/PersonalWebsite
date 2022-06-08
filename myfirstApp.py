@@ -5,13 +5,13 @@ from flask_pymongo import PyMongo
 import os
 app = Flask(__name__)
 
-app.config["MONGO_URI"] = "mongodb+srv://george:tKlOrnl7yoyzwkQw@all.nmpma.mongodb.net/All?retryWrites=true&w=majority"
-app.config["MONGO_DBNAME"] = 'personal_details'
+app.config["MONGO_URI"] = "mongodb+srv://george:tKlOrnl7yoyzwkQw@all.nmpma.mongodb.net/personal_details?retryWrites=true&w=majority"
+
 mongo = PyMongo(app)
 database = mongo.db
 @app.route("/")
 def index():
-    return render_template("index.html", projects=database.projects.find() )
+    return render_template("index.html", projects=database.projects.find())
 
 @app.route("/student")
 def student():
@@ -33,3 +33,7 @@ def view_cv():
 @app.route("/project")
 def project_view():
     return render_template("project.html");
+
+@app.route("/update",methods=["GET"])
+def update_view():
+   return render_template("update.html")
