@@ -4,8 +4,7 @@ from flask.helpers import url_for
 from flask_pymongo import PyMongo
 import os
 app = Flask(__name__)
-
-app.config["MONGO_URI"] = "mongodb+srv://george:tKlOrnl7yoyzwkQw@all.nmpma.mongodb.net/personal_details?retryWrites=true&w=majority"
+app.config["MONGO_URI"] = os.environ['MONGO_URI'].format(os.environ['DB_USERNAME'],os.environ['PASSWORD'], os.environ['DATABASE_NAME'])[1:-1]
 
 mongo = PyMongo(app)
 database = mongo.db
