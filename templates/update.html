@@ -112,5 +112,28 @@
 
 
 </form>
+<form class="card w-50 mx-auto">
+    <div class="card-body bg-dark text-white rounded">
+        <h5 class="card-title text-center">Dream</h5>
+        <div class="form-group">
+            <label for="skill">Goal</label>
+            <input type="text" class="form-control mb-2" placeholder="Inset a goal" name="goal">
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+            <label class="form-check-label" for="exampleRadios1">
+                Main
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+            <label class="form-check-label" for="exampleRadios2">
+                Secondary
+            </label>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
 <script src="{{url_for('static', filename='/js/add_del_logic.js')}}"></script>
 {% endblock %}
