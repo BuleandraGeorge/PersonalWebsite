@@ -5,9 +5,12 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-            <ul class=" navbar-nav mb-2 mb-lg-0 fs-5">
+            <ul class=" navbar-nav mb-2 mb-lg-0 fs-5" id="main-nav-bar">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="{{url_for("student")}}">Student</a>
+                    <a class="nav-link" aria-current="page" href="{{url_for("index")}}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="{{url_for("student")}}">Student</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{url_for("developer")}}">Developer</a>
@@ -19,3 +22,4 @@
         </div>
     </div>
 </nav>
+<script src="{{url_for('static', filename="js/nav_bar.js")}}"></script>
