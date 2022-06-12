@@ -4,7 +4,7 @@
 
 <h1 class="text-center text-light">Developer's Page</h1>
 <hr />
-<form class="card w-50 mx-auto">
+<form class="card w-50 mx-auto" action="{{url_for('add_project')}}" method="post">
     <div class="card-body bg-dark text-white rounded">
         <h5 class="card-title text-center">Project</h5>
         <div class="form-group ">
@@ -49,7 +49,7 @@
     </div>
 </form>
 
-<form class="card w-50 mx-auto">
+<form class="card w-50 mx-auto" action="{{url_for('add_course')}}" method="post">
     <div class="card-body bg-dark text-white rounded">
         <h5 class="card-title text-center">Course</h5>
         <div class="form-group ">
@@ -86,7 +86,7 @@
 
 
 </form>
-<form class="card w-50 mx-auto">
+<form class="card w-50 mx-auto" action="{{url_for('add_skill')}}" method="post" >
     <div class="card-body bg-dark text-white rounded">
         <h5 class="card-title text-center">Skill</h5>
         <div class="form-group ">
@@ -112,7 +112,7 @@
 
 
 </form>
-<form class="card w-50 mx-auto">
+<form class="card w-50 mx-auto" action="{{url_for('add_goal')}}" method="post">>
     <div class="card-body bg-dark text-white rounded">
         <h5 class="card-title text-center">Dream</h5>
         <div class="form-group">

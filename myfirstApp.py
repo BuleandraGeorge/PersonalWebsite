@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import render_template, send_from_directory
+from flask import render_template, send_from_directory, redirect
 from flask.helpers import url_for
 from flask_pymongo import PyMongo
 import os
@@ -33,6 +33,27 @@ def view_cv():
 def project_view():
     return render_template("project.html");
 
+
 @app.route("/update",methods=["GET"])
 def update_view():
    return render_template("update.html")
+
+@app.route("/add_project",methods=["POST"])
+def add_project():
+   print("Add Project Working")
+   return redirect(url_for('update_view'))
+
+@app.route("/add_course",methods=["POST"])
+def add_course():
+   print("Add Course Working")
+   return redirect(url_for('update_view'))
+
+@app.route("/add_skill",methods=["POST"])
+def add_skill():
+   print("Add Skill Working")
+   return redirect(url_for('update_view'))
+
+@app.route("/add_goal",methods=["POST"])
+def add_goal():
+   print("Add Goal Working")
+   return redirect(url_for('update_view'))
