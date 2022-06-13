@@ -56,7 +56,13 @@ def add_project():
 
 @app.route("/add_course",methods=["POST"])
 def add_course():
-   print(request.form)
+   newCourse = request.form.to_dict()
+   newCourse['class'] = request.form.getlist('class')
+   picture = request.files['course_picture']
+   picture.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+   newCourse['course_picture'] = secure_filename(picture.filename)
+  
+   database.studies.insert_one(newCourse)
    return redirect(url_for('update_view'))
 
 @app.route("/add_skill",methods=["POST"])

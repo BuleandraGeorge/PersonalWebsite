@@ -48,29 +48,29 @@
     </div>
 </form>
 
-<form class="card w-50 mx-auto mb-2" action="{{url_for('add_course')}}" method="post">
+<form class="card w-50 mx-auto mb-2" enctype="multipart/form-data" action="{{url_for('add_course')}}" method="post" >
     <div class="card-body bg-dark text-white rounded">
         <h5 class="card-title text-center">Course</h5>
         <div class="form-group ">
-            <label for="project_name">Name</label>
-            <input type="text" class="form-control" name="course_name" placeholder="Enter the name of the course">
+            <label for="course_name">Name</label>
+            <input type="text" class="form-control" name="course_name" placeholder="Enter the name of the course" required>
         </div>
 
         <div class="form-group ">
             <label for="course_period">Period</label>
-            <input type="text" class="form-control" name="course_period" placeholder="Insert the course's period">
+            <input type="text" class="form-control" name="course_period" placeholder="Insert the course's period" required>
         </div>
         <div class="form-group">
             <label for="description">Description</label>
-            <textarea class="form-control" name="description" placeholder="Brief description of the course" rows="6"></textarea>
+            <textarea class="form-control" name="description" placeholder="Brief description of the course" rows="6" required></textarea>
         </div>
         <div class="form-group ">
             <label for="course_period">Period</label>
-            <input type="text" class="form-control" name="course_period" placeholder="Insert the course's period">
+            <input type="text" class="form-control" name="course_period" placeholder="Insert the course's period" required>
         </div>
         <div class="form-group" id="class_inputs">
             <label for="class">Classes</label>
-            <input type="text" class="form-control mb-2" placeholder="Insert class" name="class">
+            <input type="text" class="form-control mb-2" placeholder="Insert class" name="class" required>
             <div class="d-flex justify-content-between mb-2" id="class_buttons">
                 <a id="add" class="btn btn-primary add"><i class="fa-solid fa-plus"></i></a>
                 <a id="del" class="btn btn-danger del"><i class="fa-solid fa-minus"></i></a>
@@ -78,7 +78,7 @@
         </div>
         <div class="form-group ">
             <label for="course_picture">Picture</label>
-            <input type="file" class="form-control" name="course_picture" accept="image/jpeg, image/jpg, image/pmg">
+            <input type="file" class="form-control" name="course_picture" accept="image/jpeg, image/jpg, image/pmg" required>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
