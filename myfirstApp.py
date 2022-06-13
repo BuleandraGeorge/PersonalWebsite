@@ -37,7 +37,7 @@ def project_view():
 @app.route("/update",methods=["GET"])
 def update_view():
    
-   return render_template("update.html")
+   return render_template("update.html", skills=list(database.skills.find()))
 
 @app.route("/add_project",methods=["POST"])
 def add_project():
@@ -61,13 +61,26 @@ def add_course():
    picture = request.files['course_picture']
    picture.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
    newCourse['course_picture'] = secure_filename(picture.filename)
-  
    database.studies.insert_one(newCourse)
    return redirect(url_for('update_view'))
 
 @app.route("/add_skill",methods=["POST"])
 def add_skill():
-   print("Add Skill Working")
+   newSkill = request.form.to_dict()
+   newSkill['skill'] = request.form.getlist('skill')
+   skill_type = database.skills.find_one({'name':newSkill['skill_type']})
+   if skill_type:
+       skills = skill_type['skills']
+       skills = skills + newSkill['skill']
+       myquery = {"skills": skill_type['skills']}
+       newvalues = { "$set":{'skills':skills} }
+       database.skills.update_one(myquery, newvalues )
+   else:
+       newEntry ={
+           "name":newSkill['skill_type'],
+           "skills":newSkill['skill']
+           }
+       database.skills.insert_one(newEntry)
    return redirect(url_for('update_view'))
 
 @app.route("/add_goal",methods=["POST"])
