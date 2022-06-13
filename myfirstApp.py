@@ -1,11 +1,11 @@
-from flask import Flask
-from flask import render_template, send_from_directory, redirect
-from flask.helpers import url_for
+from itertools import product
+from flask import Flask, render_template, send_from_directory, redirect, request, url_for
+from werkzeug.utils import secure_filename
 from flask_pymongo import PyMongo
 import os
 app = Flask(__name__)
 app.config["MONGO_URI"] = os.environ['MONGO_URI'].format(os.environ['DB_USERNAME'],os.environ['PASSWORD'], os.environ['DATABASE_NAME'])[1:-1]
-
+app.config['UPLOAD_FOLDER'] = './static/images'
 mongo = PyMongo(app)
 database = mongo.db
 @app.route("/")
@@ -36,16 +36,27 @@ def project_view():
 
 @app.route("/update",methods=["GET"])
 def update_view():
+   
    return render_template("update.html")
 
 @app.route("/add_project",methods=["POST"])
 def add_project():
-   print("Add Project Working")
+   project =request.form.to_dict()
+   project['features'] = request.form.getlist('features')
+   project['technologies'] = request.form.getlist('technologies')
+   project['others-project'] = request.form.getlist('others-project')
+   project['project_pictures'] = list()
+   pictures = request.files.getlist('project_pictures')
+   for picture in pictures:
+       filename = secure_filename(picture.filename)
+       project['project_pictures'].append(filename)
+       picture.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+   database.projects.insert_one(project)
    return redirect(url_for('update_view'))
 
 @app.route("/add_course",methods=["POST"])
 def add_course():
-   print("Add Course Working")
+   print(request.form)
    return redirect(url_for('update_view'))
 
 @app.route("/add_skill",methods=["POST"])

@@ -7,10 +7,9 @@ document.addEventListener('click', function (e) {
     {
         initialInput = button.parentNode.previousElementSibling;
         newInput = document.createElement('input');
-        newInput.setAttribute('placeholder', initialInput.placeholder);
-        newInput.setAttribute('type', initialInput.type);
-        newInput.setAttribute('class', initialInput.className);
-        newInput.setAttribute('name', initialInput.name);
+        for (let i = 0; i < 5; i++){
+            newInput.setAttribute(initialInput.attributes[i].name, initialInput.attributes[i].nodeValue);
+        }
         initialInput.parentNode.insertBefore(newInput, button.parentNode);
     }
     else if (button.className.indexOf('del') != -1)

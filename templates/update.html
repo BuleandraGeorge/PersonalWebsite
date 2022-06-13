@@ -2,22 +2,21 @@
 
 {% block content %}
 
-<h1 class="text-center text-light">Developer's Page</h1>
-<hr />
-<form class="card w-50 mx-auto" action="{{url_for('add_project')}}" method="post">
+<h1 class="text-center text-light my-5">Developer's Page</h1>
+<form class="card w-50 mx-auto mb-2" enctype="multipart/form-data" action="{{url_for('add_project')}}" method="post">
     <div class="card-body bg-dark text-white rounded">
         <h5 class="card-title text-center">Project</h5>
         <div class="form-group ">
             <label for="project_name">Project Name</label>
-            <input type="text" class="form-control" placeholder="Enter the name of the project" name="project_name">
+            <input type="text" class="form-control" placeholder="Enter the name of the project" name="project_name" required>
         </div>
         <div class="form-group">
             <label for="description">Description</label>
-            <textarea class="form-control" id="description" placeholder="Description of the project" rows="6"></textarea>
+            <textarea class="form-control" id="description" placeholder="Description of the project" rows="6" required></textarea>
         </div>
         <div class="form-group" id="features_inputs">
             <label for="features">Features</label>
-            <input type="text" class="form-control mb-2" placeholder="Add features" name="features">
+            <input type="text" class="form-control mb-2" placeholder="Add features" name="features" required>
             <div class="d-flex justify-content-between mb-2" id="features_buttons">
                 <a id="add" class="btn btn-primary add"><i class="fa-solid fa-plus"></i></a>
                 <a id="del" class="btn btn-danger del"><i class="fa-solid fa-minus"></i></a>
@@ -26,7 +25,7 @@
         </div>
         <div class="form-group">
             <label for="technologies">Technologies</label>
-            <input type="text" class="form-control mb-2" placeholder="Add a technology" name="technologies">
+            <input type="text" class="form-control mb-2" placeholder="Add a technology" name="technologies" required>
             <div class="d-flex justify-content-between mb-2">
                 <a class="btn btn-primary add "><i class="fa-solid fa-plus"></i></a>
                 <a class="btn btn-danger del"><i class="fa-solid fa-minus"></i></a>
@@ -35,21 +34,21 @@
 
         <div class="form-group">
             <label for="others-project">Others</label>
-            <input type="text" class="form-control mb-2" placeholder="Add something" name="others-project">
+            <input type="text" class="form-control mb-2" placeholder="Add something" name="others-project" required />
             <div class="d-flex justify-content-between mb-2">
                 <a id="add" class="btn btn-primary add"><i class="fa-solid fa-plus"></i></a>
                 <a id="del" class="btn btn-danger del"><i class="fa-solid fa-minus"></i></a>
             </div>
         </div>
         <div class="form-group ">
-            <label for="course_picture">Pictures</label>
-            <input type="file" class="form-control" name="course_picture" accept="image/jpeg, image/jpg, image/pmg">
+            <label for="project_pictures">Pictures</label>
+            <input type="file" class="form-control" name="project_pictures" accept="image/jpeg, image/jpg, image/pmg" multiple>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </form>
 
-<form class="card w-50 mx-auto" action="{{url_for('add_course')}}" method="post">
+<form class="card w-50 mx-auto mb-2" action="{{url_for('add_course')}}" method="post">
     <div class="card-body bg-dark text-white rounded">
         <h5 class="card-title text-center">Course</h5>
         <div class="form-group ">
@@ -86,7 +85,7 @@
 
 
 </form>
-<form class="card w-50 mx-auto" action="{{url_for('add_skill')}}" method="post" >
+<form class="card w-50 mx-auto mb-2" action="{{url_for('add_skill')}}" method="post" >
     <div class="card-body bg-dark text-white rounded">
         <h5 class="card-title text-center">Skill</h5>
         <div class="form-group ">
@@ -112,7 +111,7 @@
 
 
 </form>
-<form class="card w-50 mx-auto" action="{{url_for('add_goal')}}" method="post">>
+<form class="card w-50 mx-auto mb-2" action="{{url_for('add_goal')}}" method="post">
     <div class="card-body bg-dark text-white rounded">
         <h5 class="card-title text-center">Dream</h5>
         <div class="form-group">
