@@ -85,5 +85,7 @@ def add_skill():
 
 @app.route("/add_goal",methods=["POST"])
 def add_goal():
-   print("Add Goal Working")
+   newGoal = request.form.to_dict()
+   newGoal['isMain'] = True if request.form['isMain']=="on" else False
+   database.dreams.insert_one(newGoal)
    return redirect(url_for('update_view'))
