@@ -3,37 +3,32 @@
 {% block content %}
 <div class="text-light">
     <h1 class="text-light text-center my-5"> Studies</h1>
+    {% for study in studies%}
     <div class="card text-center bg-dark text-light mb-5">
         <div class="card-body">
             <div class="row my-3">
                 <div class="col-8">
-                    <h5 class="card-title my-4 ">Artificial Intelligence, De Montfort University, Leicester, UK</h5>
-                    <h5 class="my-2">Expected Degree</h5>
-                    <p>BSc Hons Computer Science </p>
-                    <p class="card-text">October 2020 - Present</p>
+                    <h5 class="card-title my-4 ">{{study.course_name}}</h5>
+                    <h5 class="my-2">Degree</h5>
+                    <p>{{study.degree}} </p>
+                    <h5>Course Period</h5>
+                    <p class="card-text">{{study.course_period}}</p>
+                    <h5>Description</h5>
                     <p class="card-text">
-                        Description
-                        With supporting text below as a natural lead-in to additional content.
-                        With supporting text below as a natural lead-in to additional content
-                        With supporting text below as a natural lead-in to additional content
-                        With supporting text below as a natural lead-in to additional content
-                        With supporting text below as a natural lead-in to additional content
-                        With supporting text below as a natural lead-in to additional content
+                        {{study.description}}
                     </p>
                     <h5>Courses</h5>
-                    <p class="m-0">Advanced Object Oriented Programing in C++</p>
-                    <p class="m-0">Advanced Object Oriented Programing in C++</p>
-                    <p class="m-0">Advanced Object Oriented Programing in C++</p>
-                    <p class="m-0">Advanced Object Oriented Programing in C++</p>
-                    <p class="m-0">Advanced Object Oriented Programing in C++</p>
-
+                    {% for class in study.class %}
+                    <p class="m-0">{{class}}</p>
+                    {% endfor %}
                 </div>
                 <div class="col-4 d-flex justify-content-center">
-                    <img src="{{url_for('static', filename="images/dmu.png")}}" class="img-fluid" alt="...">
+                    <img src="{{url_for('static', filename='images/'+study.course_picture)}}" class="img-fluid" alt="...">
                 </div>
             </div>
         </div>
     </div>
+    {% endfor %}
 </div>
 
 {% endblock %}

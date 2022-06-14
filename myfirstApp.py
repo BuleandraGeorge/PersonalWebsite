@@ -14,7 +14,8 @@ def index():
 
 @app.route("/student")
 def student():
-    return render_template("student.html");
+    studies = list(database.studies.find())
+    return render_template("student.html",studies=studies);
 
 @app.route("/developer")
 def developer():
@@ -59,7 +60,7 @@ def add_course():
    newCourse = request.form.to_dict()
    newCourse['class'] = request.form.getlist('class')
    picture = request.files['course_picture']
-   picture.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+   picture.save(os.path.join(app.config['UPLOAD_FOLDER'], picture.filename))
    newCourse['course_picture'] = secure_filename(picture.filename)
    database.studies.insert_one(newCourse)
    return redirect(url_for('update_view'))
