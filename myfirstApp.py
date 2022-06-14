@@ -19,7 +19,9 @@ def student():
 
 @app.route("/developer")
 def developer():
-    return render_template("developer.html");
+    projects = list(database.projects.find())
+    skills=list(database.skills.find())
+    return render_template("developer.html", projects = projects, skills=skills);
 
 @app.route("/dreamer")
 def dreamer():
@@ -50,7 +52,7 @@ def add_project():
    pictures = request.files.getlist('project_pictures')
    for picture in pictures:
        filename = secure_filename(picture.filename)
-       project['project_pictures'].append(filename)
+       project['project_pictures'].append(secure_filename(picture.filename))
        picture.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
    database.projects.insert_one(project)
    return redirect(url_for('update_view'))
