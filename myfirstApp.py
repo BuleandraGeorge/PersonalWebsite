@@ -46,7 +46,7 @@ def view_cv():
 @app.route("/project/<string:project_id>")
 def project_view(project_id):
     project = database.projects.find_one_or_404({"_id": ObjectId(project_id)})
-    return render_template("project.html");
+    return render_template("project.html", project = project);
 
 
 @app.route("/update",methods=["GET"])
@@ -59,7 +59,7 @@ def add_project():
    project =request.form.to_dict()
    project['features'] = request.form.getlist('features')
    project['technologies'] = request.form.getlist('technologies')
-   project['others-project'] = request.form.getlist('others-project')
+   project['others_project'] = request.form.getlist('others_project')
    project['project_pictures'] = list()
    pictures = request.files.getlist('project_pictures')
    for picture in pictures:

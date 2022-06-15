@@ -1,18 +1,14 @@
 {% extends 'base.html '%}
 
 {% block content %}
-<h1 class="text-center text-light">Project name</h1>
+<h1 class="text-center text-light">{{project.project_name}}</h1>
 <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
-        <div class="carousel-item active" data-bs-interval="10000">
-            <img src="..." class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-item" data-bs-interval="2000">
-            <img src="..." class="d-block w-100" alt="...">
-        </div>
-        <div class="carousel-item">
-            <img src="..." class="d-block w-100" alt="...">
-        </div>
+     {% for image in project.project_pictures %}
+      <div class="carousel-item active" data-bs-interval="10000">
+            <img src="{{url_for('static', filename='images/'+image)}}" class="d-block w-100" alt="project_picture">
+      </div>
+     {% endfor %}
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -24,13 +20,31 @@
     </button>
 </div>
 <h2 class="text-center text-light"> Description </h2>
-<p class="text-center text-light"> Here are the game features</p>
+<p class="text-center text-light"> {{project.project_description}}</p>
 <h2 class="text-center text-light"> Features </h2>
-<p class="text-center text-light"> Here are the game features</p>
+{% for feature in project.features %}
+    <p class="text-center text-light"> {{feature}}</p>
+{% endfor %}
+
 <h2 class="text-center text-light"> Tehnologies used </h2>
-<p class="text-center text-light"> Here are the game features</p>
+{% for tech in project.technologies %}
+    <p class="text-center text-light"> {{tech}}</p>
+{% endfor %}
 <h2 class="text-center text-light"> Other elements </h2>
-<p class="text-center text-light"> Here are the game features</p>
-<a class="btn btn-info mx-auto">Check on github</a>
+{% for other in project.others_project %}
+    <p class="text-center text-light"> {{other}}</p>
+{% endfor %}
+
+{% if project.project_link %}
+<h3 class="text-center text-light"> Visit the project here </h3>
+<div class="d-flex justify_content_center my-2">
+    <a class="btn btn-outline-info mx-auto" href="{{project.project_link}}" target="_blank">{{project.project_name}}</a>
+</div>
+{% endif %}
+<div class="d-flex justify_content_center my-2">
+<a href="{{project.github_link}}" target="_blank" class="btn btn-info mx-auto">Check on github</a>
+</div>
+
+%}
 
 {% endblock %}

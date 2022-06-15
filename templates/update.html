@@ -34,15 +34,23 @@
 
         <div class="form-group">
             <label for="others-project">Others</label>
-            <input type="text" class="form-control mb-2" placeholder="Add something" name="others-project" required />
+            <input type="text" class="form-control mb-2" placeholder="Add something" name="others_project" required />
             <div class="d-flex justify-content-between mb-2">
                 <a id="add" class="btn btn-primary add"><i class="fa-solid fa-plus"></i></a>
                 <a id="del" class="btn btn-danger del"><i class="fa-solid fa-minus"></i></a>
             </div>
         </div>
+         <div class="form-group">
+            <label for="github_link">Github link</label>
+            <input type="url" class="form-control mb-2" placeholder="Insert link" name="github_link" required />
+        </div>
+        <div class="form-group">
+            <label for="project_link">Website link</label>
+            <input type="url" class="form-control mb-2" placeholder="Insert project's link " name="project_link"/>
+        </div>
         <div class="form-group ">
             <label for="project_pictures">Pictures</label>
-            <input type="file" class="form-control" name="project_pictures" accept="image/jpeg, image/jpg, image/pmg" multiple>
+            <input type="file" class="form-control" name="project_pictures" accept="image/jpeg, image/jpg, image/png, image/bmp" multiple>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
