@@ -22,16 +22,19 @@
 
 <p class=" fs-1 text-center text-light my-5">Work</p>
 <div class="container mandatory-scroll-snapping my-5">
-    <div class="item"><div class="thing"></div></div>
-    <div class="item "><div class="thing"></div></div>
-    <div class="item"><div class="thing"></div></div>
-    <div class="item"><div class="thing"></div></div>
-    <div class="item"><div class="thing"></div></div>
+    {% for project in projects %}
+        <div class="item">
+            <div class="card bg-dark text-white">
+                <img src="{{url_for('static', filename='images/' + project.project_pictures[0])}}" class="card-img-top" alt="picture-project">
+                <div class="card-body">
+                    <h5 class="card-title">{{project.project_name}}</h5>
+                    <p class="card-text text-truncate">{{project.project_description}}.</p>
+                    <a href="#" class="btn btn-primary">See Details</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
 </div>
-{% for project in projects %}
-    {{project}}
-{% endfor%}
-<h1>Before this</h1>
 <p class=" fs-1 text-center text-light my-5 ">Studies</p>
 <div class="row my-5">
     <div class="col-6">

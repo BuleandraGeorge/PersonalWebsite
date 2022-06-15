@@ -40,14 +40,16 @@ body {
     flex-flow: row nowrap;
     background-color: inherit;
     scroll-snap-type: x proximity;
+    max-height:50vh;
 }
 .item {
     background-color: #322C2C !important;
-    font-size: 64px;
     margin: 0 1rem 0 1rem;
     background-color: aliceblue;
     scroll-snap-align: center;
     flex: none;  
+    max-height:30rem;
+    max-width:20rem;
 }
 .card{
     border:#000000 !important;
