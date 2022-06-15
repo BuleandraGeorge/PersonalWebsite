@@ -25,7 +25,17 @@ def developer():
 
 @app.route("/dreamer")
 def dreamer():
-    return render_template("dreamer.html");
+    goals = list(database.dreams.find())
+    main_goals = []
+    secondary_goals =[]
+    for goal in goals:
+        if goal['isMain']:
+           main_goals.append(goal)
+        else:
+            secondary_goals.append(goal)
+    print(main_goals)
+    print(secondary_goals)
+    return render_template("dreamer.html", main_goals=main_goals, secondary_goals=secondary_goals);
 
 @app.route("/cv")
 def view_cv():
