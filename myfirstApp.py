@@ -2,6 +2,7 @@ from itertools import product
 from flask import Flask, render_template, send_from_directory, redirect, request, url_for
 from werkzeug.utils import secure_filename
 from flask_pymongo import PyMongo
+from bson.objectid import ObjectId
 import os
 app = Flask(__name__)
 app.config["MONGO_URI"] = os.environ['MONGO_URI'].format(os.environ['DB_USERNAME'],os.environ['PASSWORD'], os.environ['DATABASE_NAME'])[1:-1]
@@ -42,14 +43,15 @@ def view_cv():
     path = "./static/docs/"
     return send_from_directory(path, 'cv_pdf.pdf')
 
-@app.route("/project")
-def project_view():
+@app.route("/project/<string:project_id>")
+def project_view(project_id):
+    project = database.projects.find_one_or_404({"_id": ObjectId(project_id)})
     return render_template("project.html");
 
 
 @app.route("/update",methods=["GET"])
 def update_view():
-   
+
    return render_template("update.html", skills=list(database.skills.find()))
 
 @app.route("/add_project",methods=["POST"])

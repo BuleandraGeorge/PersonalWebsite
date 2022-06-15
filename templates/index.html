@@ -29,7 +29,7 @@
                 <div class="card-body">
                     <h5 class="card-title">{{project.project_name}}</h5>
                     <p class="card-text text-truncate">{{project.project_description}}.</p>
-                    <a href="#" class="btn btn-primary">See Details</a>
+                    <a href="{{url_for('project_view', project_id=project._id)}}" class="btn btn-primary">See Details</a>
                 </div>
             </div>
         </div>
