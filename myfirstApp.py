@@ -52,8 +52,10 @@ def project_view(project_id):
 
 @app.route("/update",methods=["GET"])
 def update_view():
-
-   return render_template("update.html", skills=list(database.skills.find()))
+    isOwner = True if database.owner.find_one({'user_addr':str(request.remote_addr)}) else False
+    if isOwner:
+        return render_template("update.html", skills=list(database.skills.find()))
+    return redirect(url_for('login'))
 
 @app.route("/add_project",methods=["POST"])
 def add_project():
@@ -110,9 +112,11 @@ def add_goal():
 def login():
     if request.method =="POST":
         if request.form['password'] == OWNER_PASSWORD:
-            resp = make_response(redirect(url_for('index')))
-            resp.set_cookie("isOwner", 'True')
-            return resp
+            database.owner.insert_one({"user_addr":request.remote_addr})
+            return redirect((url_for('update_view')))
         else:
             return render_template('login.html', wrong_password=True)
+    ownerLogged = True if database.owner.find_one({'user_addr':str(request.remote_addr)}) else False
+    if ownerLogged:
+        database.owner.delete_one({'user_addr':str(request.remote_addr)})
     return render_template('login.html', wrong_password=False)
