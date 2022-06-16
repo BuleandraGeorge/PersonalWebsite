@@ -128,4 +128,29 @@ def login():
 def logout():
     database.owner.delete_many({"user_addr":str(request.remote_addr)})
     return redirect('index')
+
+@app.route('/list')
+@isOwner(database)
+def list():
+    return render_template('edit_pages/list.html')
+
+@app.route('/edit_project/<project_id>')
+@isOwner(database)
+def edit_project(project_id):
+    return render_template('edit_pages/project.html')
+
+@app.route('/edit_course/<course_id>')
+@isOwner(database)
+def edit_course(course_id):
+    return render_template('edit_pages/course.html')
+
+@app.route('/edit_skill_set/<skill_set_id>')
+@isOwner(database)
+def edit_skill_set(skill_set_id):
+    return render_template('edit_pages/skill_set.html')
+
+@app.route('/edit_goal/<goal_id>')
+@isOwner(database)
+def edit_goal(goal_id):
+    return render_template('edit_pages/goal.html')
     
