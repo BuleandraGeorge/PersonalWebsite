@@ -157,4 +157,17 @@ def edit_skill_set(skill_set_id):
 @isOwner(database)
 def edit_goal(goal_id):
     return render_template('edit_pages/goal.html')
+ 
+@app.route('/deletel/<asset>/<asset_id>')
+@isOwner(database)
+def delete(asset, asset_id):
+    if asset=="project":
+        database.projects.delete_one({'_id':ObjectId(asset_id)})
+    elif asset =="course":
+        database.studies.delete_one({'_id':ObjectId(asset_id)})
+    elif asset == "skill_set":
+        database.skills.delete_one({'_id':ObjectId(asset_id)})
+    elif asset =="goal":
+        database.dreams.delete_one({'_id':ObjectId(asset_id)})
+    return redirect(url_for('list_assets'))
     

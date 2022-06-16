@@ -11,7 +11,7 @@
 			<h5 class="card-title text-center">{{project.project_name}}</h5>
 			<hr>
 			<div class="d-flex justify-content-between">
-				<a href="#" class="btn btn-danger"> Delete</a>
+				<a href="{{url_for('delete', asset='project', asset_id=project._id)}}" class="btn btn-danger"> Delete</a>
 				<a href="#" class="btn btn-info ">Edit</a>
 			</div>
 		</div>
@@ -28,7 +28,7 @@
 			<h5 class="card-title text-center text-truncate">{{course.course_name}}</h5>
 			<hr>
 			<div class="d-flex justify-content-between">
-				<a href="#" class="btn btn-danger"> Delete</a>
+				<a href="{{url_for('delete', asset='course', asset_id=course._id)}}" class="btn btn-danger"> Delete</a>
 				<a href="#" class="btn btn-info ">Edit</a>
 			</div>
 		</div>
@@ -44,7 +44,7 @@
 			<h5 class="card-title text-center text-truncate">{{skill_set.name}}</h5>
 			<hr>
 			<div class="d-flex justify-content-between">
-				<a href="#" class="btn btn-danger"> Delete</a>
+				<a href="{{url_for('delete', asset='skill_set', asset_id=skill_set._id)}}" class="btn btn-danger"> Delete</a>
 				<a href="#" class="btn btn-info ">Edit</a>
 			</div>
 		</div>
@@ -60,7 +60,7 @@
 			<h5 class="card-title text-center text-truncate">{{goal.goal_title}}</h5>
 			<hr>
 			<div class="d-flex justify-content-between">
-				<a href="#" class="btn btn-danger"> Delete</a>
+				<a href="{{url_for('delete', asset='goal', asset_id=goal._id)}}" class="btn btn-danger"> Delete</a>
 				<a href="#" class="btn btn-info ">Edit</a>
 			</div>
 		</div>
