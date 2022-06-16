@@ -3,6 +3,7 @@ from flask import Flask, render_template, send_from_directory, redirect, request
 from werkzeug.utils import secure_filename
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
+from decorators import isOwner
 import os
 app = Flask(__name__)
 app.config["MONGO_URI"] = os.environ['MONGO_URI'].format(os.environ['DB_USERNAME'],os.environ['PASSWORD'], os.environ['DATABASE_NAME'])[1:-1]
@@ -51,13 +52,12 @@ def project_view(project_id):
 
 
 @app.route("/update",methods=["GET"])
+@isOwner(database)
 def update_view():
-    isOwner = True if database.owner.find_one({'user_addr':str(request.remote_addr)}) else False
-    if isOwner:
-        return render_template("update.html", skills=list(database.skills.find()))
-    return redirect(url_for('login'))
+    return render_template("update.html", skills=list(database.skills.find()))
 
 @app.route("/add_project",methods=["POST"])
+@isOwner(database)
 def add_project():
    project =request.form.to_dict()
    project['features'] = request.form.getlist('features')
@@ -73,6 +73,7 @@ def add_project():
    return redirect(url_for('update_view'))
 
 @app.route("/add_course",methods=["POST"])
+@isOwner(database)
 def add_course():
    newCourse = request.form.to_dict()
    newCourse['class'] = request.form.getlist('class')
@@ -83,6 +84,7 @@ def add_course():
    return redirect(url_for('update_view'))
 
 @app.route("/add_skill",methods=["POST"])
+@isOwner(database)
 def add_skill():
    newSkill = request.form.to_dict()
    newSkill['skill'] = request.form.getlist('skill')
@@ -102,6 +104,7 @@ def add_skill():
    return redirect(url_for('update_view'))
 
 @app.route("/add_goal",methods=["POST"])
+@isOwner(database)
 def add_goal():
    newGoal = request.form.to_dict()
    newGoal['isMain'] = True if request.form['isMain']=="on" else False
@@ -115,8 +118,14 @@ def login():
             database.owner.insert_one({"user_addr":request.remote_addr})
             return redirect((url_for('update_view')))
         else:
-            return render_template('login.html', wrong_password=True)
-    ownerLogged = True if database.owner.find_one({'user_addr':str(request.remote_addr)}) else False
-    if ownerLogged:
-        database.owner.delete_one({'user_addr':str(request.remote_addr)})
+            return render_template('login.html', wrong_password=True,)
+    if database.owner.find_one({"user_addr":str(request.remote_addr)}):
+        return redirect('update')
     return render_template('login.html', wrong_password=False)
+
+@app.route("/logout", methods=['GET'])
+@isOwner(database)
+def logout():
+    database.owner.delete_many({"user_addr":str(request.remote_addr)})
+    return redirect('index')
+    
