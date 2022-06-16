@@ -131,8 +131,12 @@ def logout():
 
 @app.route('/list')
 @isOwner(database)
-def list():
-    return render_template('edit_pages/list.html')
+def list_assets():
+    projects = list(database.projects.find())
+    courses = list(database.studies.find())
+    skill_sets = list(database.skills.find())
+    goals = list(database.dreams.find())
+    return render_template('edit_pages/list.html', projects=projects,courses=courses, skill_sets=skill_sets, goals=goals)
 
 @app.route('/edit_project/<project_id>')
 @isOwner(database)
