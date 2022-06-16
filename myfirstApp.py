@@ -104,3 +104,9 @@ def add_goal():
    newGoal['isMain'] = True if request.form['isMain']=="on" else False
    database.dreams.insert_one(newGoal)
    return redirect(url_for('update_view'))
+
+@app.route("/login", methods=['POST', 'GET'])
+def login():
+    return render_template('login.html')
+    if request.method =="POST":
+        return redirect(url_for('index'))
