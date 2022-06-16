@@ -5,9 +5,15 @@
 <h1 class="text-center text-light"> Hi there! </h1>
 <h1 class="text-center text-light"> The link that you've just accessed is for the owner only.</h1>
 <h1 class="text-center text-light"> Insert the password to verify that you are the owner </h1>
-<form class="mt-5" method="POST" action="#">
+<form class="mt-5" method="POST" action="{{url_for('login')}}">
+
+		<input class="form-control form-control-lg mx-auto w-50" type="password" placeholder="Insert the password" name="password">
+		
+	</div>
 	<div class="d-flex justify-content-center">
-		<input class="form-control form-control-lg mx-auto w-50" type="password" placeholder="Insert the password">
+	{% if wrong_password %}
+			<small class="text-danger text-center mx-auto"> Password is wrong, please try again</small>
+		{% endif %}
 	</div>
 	<div class="d-flex justify-content-center mt-3">
 		<button type="submit" class="btn btn-info mx-auto">Login</button>

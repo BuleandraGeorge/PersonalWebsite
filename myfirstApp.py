@@ -1,5 +1,5 @@
 from itertools import product
-from flask import Flask, render_template, send_from_directory, redirect, request, url_for
+from flask import Flask, render_template, send_from_directory, redirect, request, url_for, make_response
 from werkzeug.utils import secure_filename
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
@@ -9,6 +9,7 @@ app.config["MONGO_URI"] = os.environ['MONGO_URI'].format(os.environ['DB_USERNAME
 app.config['UPLOAD_FOLDER'] = './static/images'
 mongo = PyMongo(app)
 database = mongo.db
+OWNER_PASSWORD = '1234'
 @app.route("/")
 def index():
     return render_template("index.html", projects=database.projects.find())
@@ -107,6 +108,11 @@ def add_goal():
 
 @app.route("/login", methods=['POST', 'GET'])
 def login():
-    return render_template('login.html')
     if request.method =="POST":
-        return redirect(url_for('index'))
+        if request.form['password'] == OWNER_PASSWORD:
+            resp = make_response(redirect(url_for('index')))
+            resp.set_cookie("isOwner", 'True')
+            return resp
+        else:
+            return render_template('login.html', wrong_password=True)
+    return render_template('login.html', wrong_password=False)
