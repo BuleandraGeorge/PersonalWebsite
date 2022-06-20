@@ -78,7 +78,7 @@ def add_course():
    newCourse = request.form.to_dict()
    newCourse['class'] = request.form.getlist('class')
    picture = request.files['course_picture']
-   picture.save(os.path.join(app.config['UPLOAD_FOLDER'], picture.filename))
+   picture.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(picture.filename)))
    newCourse['course_picture'] = secure_filename(picture.filename)
    database.studies.insert_one(newCourse)
    return redirect(url_for('update_view'))
@@ -183,10 +183,26 @@ def edit(asset, asset_id):
                 newData.pop('delete_picture')
             newData['project_pictures'] = newPictures + currentPictures # new set of pictures equals the union between new and current pictures left
             database.projects.update_one({"_id":ObjectId(asset_id)},  {"$set":newData})
+            return redirect(url_for('project_view', project_id = asset_id ))
         project = database.projects.find_one({'_id':ObjectId(asset_id)})
         return render_template('edit.html', form = "elements/forms/project_form.html" , form_values = project)
     elif asset =="course":
-        database.studies.delete_one({'_id':ObjectId(asset_id)})
+        course = database.studies.find_one({'_id':ObjectId(asset_id)})
+        print(course)
+        if request.method=="POST":
+           newData = request.form.to_dict()
+           newData['class'] = request.form.getlist('class')
+           picture = request.files['course_picture']
+           try:
+                picture.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(picture.filename)))
+                os.remove(app.config['UPLOAD_FOLDER']+"/"+ course['course_picture'])
+                newData['course_picture'] = secure_filename(picture.filename)
+           except:
+                print("Problem")
+                pass
+           database.studies.update_one({"_id":ObjectId(asset_id)},  {"$set":newData})
+           return redirect(url_for('student'))
+        return render_template('edit.html', form = 'elements/forms/course_form.html', form_values = course)
     elif asset == "skill_set":
         database.skills.delete_one({'_id':ObjectId(asset_id)})
     elif asset =="goal":

@@ -1,26 +1,33 @@
-<form class="card w-50 mx-auto mb-2" enctype="multipart/form-data" action="{{url_for('add_course')}}" method="post" >
+<form class="card w-50 mx-auto mb-2" enctype="multipart/form-data" action="{{ url_for('edit', asset='course', asset_id=form_values._id) if form_values is defined else url_for('add_course')}}" method="post" >
     <div class="card-body bg-dark text-white rounded">
         <h5 class="card-title text-center">Course</h5>
         <div class="form-group ">
             <label for="course_name">Name</label>
-            <input type="text" class="form-control" name="course_name" placeholder="Enter the name of the course" required>
+            <input type="text" class="form-control" name="course_name" placeholder="Enter the name of the course" value="{{ form_values.course_name if form_values is defined }}" required>
         </div>
         <div class="form-group ">
             <label for="degree">Degree</label>
-            <input type="text" class="form-control" name="degree" placeholder="Degree" required>
+            <input type="text" class="form-control" name="degree" placeholder="Degree" value="{{ form_values.degree if form_values is defined }}" required>
         </div>
         <div class="form-group ">
             <label for="course_period">Period</label>
-            <input type="text" class="form-control" name="course_period" placeholder="Insert the course's period" required>
+            <input type="text" class="form-control" name="course_period" placeholder="Insert the course's period" value="{{ form_values.course_period if form_values is defined }}" required>
         </div>
         <div class="form-group">
             <label for="description">Description</label>
-            <textarea class="form-control" name="description" placeholder="Brief description of the course" rows="6" required></textarea>
+            <textarea class="form-control" name="description" placeholder="Brief description of the course" rows="6" required>{{ form_values.description if form_values is defined }}</textarea>
         </div>
 
         <div class="form-group" id="class_inputs">
             <label for="class">Classes</label>
-            <input type="text" class="form-control mb-2" placeholder="Insert class" name="class" required>
+            {% if form_values is defined %}
+                {% for class in form_values.class %}
+                    <input type="text" class="form-control mb-2" placeholder="Insert class" name="class" value="{{class}}" required>
+                {% endfor %}
+            {% else %}
+                <input type="text" class="form-control mb-2" placeholder="Insert class" name="class" required>
+            {% endif %}
+            
             <div class="d-flex justify-content-between mb-2" id="class_buttons">
                 <a id="add" class="btn btn-primary add"><i class="fa-solid fa-plus"></i></a>
                 <a id="del" class="btn btn-danger del"><i class="fa-solid fa-minus"></i></a>
@@ -28,10 +35,15 @@
         </div>
         <div class="form-group ">
             <label for="course_picture">Picture</label>
-            <input type="file" class="form-control" name="course_picture" accept="image/jpeg, image/jpg, image/pmg" required>
+            
+           {% if form_values is defined %}
+                <input type="file" class="form-control" name="course_picture" accept="image/jpeg, image/jpg, image/png">
+                <img src = "{{url_for('static', filename='images/'+ form_values.course_picture)}}" style="height:5rem; width:5rem">
+           {% else %}
+                <input type="file" class="form-control" name="course_picture" accept="image/jpeg, image/jpg, image/png, image/bmp" required>
+           {% endif %}
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
-
-
 </form>
+<script src="{{url_for('static', filename='/js/add_del_logic.js')}}"></script>
