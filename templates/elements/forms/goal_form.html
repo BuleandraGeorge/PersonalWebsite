@@ -1,0 +1,15 @@
+
+<form class="card w-50 mx-auto mb-2" action="{{url_for('add_goal')}}" method="post">
+    <div class="card-body bg-dark text-white rounded">
+        <h5 class="card-title text-center">Dream</h5>
+        <div class="form-group">
+            <label for="goal">Goal</label>
+            <input type="text" class="form-control mb-2" placeholder="Inset a goal" name="goal_title">
+        </div>
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" name="isMain" checked>
+            <label class="form-check-label" for="flexSwitchCheckChecked">Main</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>

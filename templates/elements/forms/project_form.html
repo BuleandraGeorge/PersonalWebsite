@@ -1,0 +1,79 @@
+<form class="card w-50 mx-auto mb-2" enctype="multipart/form-data" action="{{url_for('edit', asset='project', asset_id=form_values._id) if form_values is defined else url_for('add_project') }}" method="post">
+    <div class="card-body bg-dark text-white rounded">
+        <h5 class="card-title text-center">Project</h5>
+        <div class="form-group ">
+            <label for="project_name">Project Name</label>
+            <input type="text" class="form-control" placeholder="Enter the name of the project" name="project_name" value ="{{ form_values.project_name if form_values is defined }}" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control" placeholder="Description of the project" rows="6"  name="project_description"  required>{{ form_values.project_description if form_values is defined }}</textarea>
+        </div>
+        <div class="form-group" id="features_inputs">
+            <label for="features">Features</label>
+            {% if form_values is defined %}
+                {% for feature in form_values.features %}
+                    <input type="text" class="form-control mb-2" placeholder="Add features" name="features" value ="{{feature}}" required>
+                {% endfor %}
+            {% else %}
+                <input type="text" class="form-control mb-2" placeholder="Add features" name="features" required>
+            {% endif %}
+            <div class="d-flex justify-content-between mb-2" id="features_buttons">
+                <a id="add" class="btn btn-primary add"><i class="fa-solid fa-plus"></i></a>
+                <a id="del" class="btn btn-danger del"><i class="fa-solid fa-minus"></i></a>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <label for="technologies">Technologies</label>
+            {% if form_values is defined %}
+                {% for tech in form_values.technologies %}
+                    <input type="text" class="form-control mb-2" placeholder="Add features" name="technologies" value="{{tech}}" required>
+                {% endfor %}
+            {% else %}
+                <input type="text" class="form-control mb-2" placeholder="Add a technology" name="technologies" required>
+            {% endif %}
+            <div class="d-flex justify-content-between mb-2">
+                <a class="btn btn-primary add "><i class="fa-solid fa-plus"></i></a>
+                <a class="btn btn-danger del"><i class="fa-solid fa-minus"></i></a>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="others-project">Others</label>
+            {% if form_values is defined %}
+                {% for other in form_values.others_project %}
+                    <input type="text" class="form-control mb-2" placeholder="Add something" name="others_project" value="{{other}}" required>
+                {% endfor %}
+            {% else %}
+                 <input type="text" class="form-control mb-2" placeholder="Add something" name="others_project" required />
+            {% endif %}    
+            <div class="d-flex justify-content-between mb-2">
+                <a id="add" class="btn btn-primary add"><i class="fa-solid fa-plus"></i></a>
+                <a id="del" class="btn btn-danger del"><i class="fa-solid fa-minus"></i></a>
+            </div>
+        </div>
+         <div class="form-group">
+            <label for="github_link">Github link</label>
+            <input type="url" class="form-control mb-2" placeholder="Insert link" name="github_link" value="{{ form_values.github_link if form_values is defined }}" required />
+        </div>
+        <div class="form-group">
+            <label for="project_link">Website link</label>
+            <input type="url" class="form-control mb-2" placeholder="Insert project's link " name="project_link" value="{{ form_values.project_link if form_values is defined }}"/>
+        </div>
+        <div class="form-group ">
+            <label for="project_pictures">Pictures</label>
+            <input type="file" class="form-control" name="project_pictures" accept="image/jpeg, image/jpg, image/png, image/bmp" multiple>
+            <div class="mt-2">
+           {% if form_values is defined %}
+                {% for picture in form_values.project_pictures %} 
+                    <img src = "{{url_for('static', filename='images/'+ picture)}}" style="height:5rem; width:5rem">
+                    <input type="checkbox" name="delete_picture" value="{{picture}}">
+                {% endfor %}
+           {% endif %}
+           <div>
+        </div>
+        <button type="submit" class="btn btn-primary my-2">Submit</button>
+    </div>
+</form>
+<script src="{{url_for('static', filename='/js/add_del_logic.js')}}"></script>

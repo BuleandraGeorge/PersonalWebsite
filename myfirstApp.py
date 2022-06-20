@@ -1,5 +1,5 @@
 from itertools import product
-from flask import Flask, render_template, send_from_directory, redirect, request, url_for, make_response
+from flask import Flask, render_template, send_from_directory, redirect, request, url_for, make_response, get_template_attribute
 from werkzeug.utils import secure_filename
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
@@ -136,29 +136,10 @@ def list_assets():
     courses = list(database.studies.find())
     skill_sets = list(database.skills.find())
     goals = list(database.dreams.find())
-    return render_template('edit_pages/list.html', projects=projects,courses=courses, skill_sets=skill_sets, goals=goals)
+    return render_template('list.html', projects=projects,courses=courses, skill_sets=skill_sets, goals=goals)
 
-@app.route('/edit_project/<project_id>')
-@isOwner(database)
-def edit_project(project_id):
-    return render_template('edit_pages/project.html')
-
-@app.route('/edit_course/<course_id>')
-@isOwner(database)
-def edit_course(course_id):
-    return render_template('edit_pages/course.html')
-
-@app.route('/edit_skill_set/<skill_set_id>')
-@isOwner(database)
-def edit_skill_set(skill_set_id):
-    return render_template('edit_pages/skill_set.html')
-
-@app.route('/edit_goal/<goal_id>')
-@isOwner(database)
-def edit_goal(goal_id):
-    return render_template('edit_pages/goal.html')
  
-@app.route('/deletel/<asset>/<asset_id>')
+@app.route('/delete/<asset>/<asset_id>')
 @isOwner(database)
 def delete(asset, asset_id):
     if asset=="project":
@@ -170,4 +151,49 @@ def delete(asset, asset_id):
     elif asset =="goal":
         database.dreams.delete_one({'_id':ObjectId(asset_id)})
     return redirect(url_for('list_assets'))
-    
+
+@app.route('/edit/<asset>/<asset_id>', methods=['GET', 'POST'])
+@isOwner(database)
+def edit(asset, asset_id):
+    if asset=="project":
+        if request.method=="POST":
+            newData = request.form.to_dict()
+            newData['features'] = request.form.getlist('features')
+            newData['technologies'] = request.form.getlist('technologies')
+            newData['others_project'] = request.form.getlist('others_project')
+            pictures = request.files.getlist('project_pictures')
+            newPictures = list()
+            deletePic = list()
+            print(newData)
+            currentPictures = database.projects.find_one({'_id':ObjectId(asset_id)})['project_pictures']
+            for picture in pictures: # if so add them in the storage
+                try:
+                    picture.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(picture.filename)))
+                    newPictures.append(secure_filename(picture.filename))
+                except:
+                    pass
+            if "delete_picture" in newData.keys(): # some of the current pic has been deleted
+                deletePic = request.form.getlist('delete_picture')
+                for pic in deletePic: # if so remove them from storage
+                    try:
+                        os.remove(app.config['UPLOAD_FOLDER']+"/"+pic)
+                    except:
+                        pass
+                    currentPictures.remove(pic) # remove them from list
+                newData.pop('delete_picture')
+            newData['project_pictures'] = newPictures + currentPictures # new set of pictures equals the union between new and current pictures left
+            database.projects.update_one({"_id":ObjectId(asset_id)},  {"$set":newData})
+        project = database.projects.find_one({'_id':ObjectId(asset_id)})
+        return render_template('edit.html', form = "elements/forms/project_form.html" , form_values = project)
+    elif asset =="course":
+        database.studies.delete_one({'_id':ObjectId(asset_id)})
+    elif asset == "skill_set":
+        database.skills.delete_one({'_id':ObjectId(asset_id)})
+    elif asset =="goal":
+        database.dreams.delete_one({'_id':ObjectId(asset_id)})
+    return redirect(url_for('list_assets'))
+
+
+"""
+{{url_for('static', filename='images/'+ picture) for picture in form_values.project_pictures if form_values is defined }}
+"""

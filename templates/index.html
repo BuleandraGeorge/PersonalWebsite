@@ -25,7 +25,12 @@
     {% for project in projects %}
         <div class="item">
             <div class="card bg-dark text-white">
+            {% if project.project_pictures|length == 0 %}
+             <img src="{{url_for('static', filename='images/image-not-found.jpg')}}" class="card-img-top" alt="picture-project">
+            {% else %}
                 <img src="{{url_for('static', filename='images/' + project.project_pictures[0])}}" class="card-img-top" alt="picture-project">
+            {% endif %}
+                
                 <div class="card-body">
                     <h5 class="card-title">{{project.project_name}}</h5>
                     <p class="card-text text-truncate">{{project.project_description}}.</p>
