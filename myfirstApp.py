@@ -24,7 +24,7 @@ def student():
 def developer():
     projects = list(database.projects.find())
     skills=list(database.skills.find())
-    return render_template("developer.html", projects = projects, skills=skills);
+    return render_template("developer.html", projects = projects, skill_sets=skills);
 
 @app.route("/dreamer")
 def dreamer():
@@ -188,7 +188,6 @@ def edit(asset, asset_id):
         return render_template('edit.html', form = "elements/forms/project_form.html" , form_values = project)
     elif asset =="course":
         course = database.studies.find_one({'_id':ObjectId(asset_id)})
-        print(course)
         if request.method=="POST":
            newData = request.form.to_dict()
            newData['class'] = request.form.getlist('class')
@@ -198,13 +197,19 @@ def edit(asset, asset_id):
                 os.remove(app.config['UPLOAD_FOLDER']+"/"+ course['course_picture'])
                 newData['course_picture'] = secure_filename(picture.filename)
            except:
-                print("Problem")
                 pass
            database.studies.update_one({"_id":ObjectId(asset_id)},  {"$set":newData})
            return redirect(url_for('student'))
         return render_template('edit.html', form = 'elements/forms/course_form.html', form_values = course)
     elif asset == "skill_set":
-        database.skills.delete_one({'_id':ObjectId(asset_id)})
+        skill_set = database.skills.find_one({'_id':ObjectId(asset_id)})
+        print(skill_set)
+        if request.method=="POST":
+           newData = request.form.to_dict()
+           newData['skills'] = request.form.getlist('skill')
+           database.skills.update_one({'_id':ObjectId(asset_id)},{'$set':newData})
+           return redirect(url_for('developer'))
+        return render_template('edit.html', form = 'elements/forms/skill_form.html', form_values = skill_set)
     elif asset =="goal":
         database.dreams.delete_one({'_id':ObjectId(asset_id)})
     return redirect(url_for('list_assets'))

@@ -7,14 +7,13 @@
 <h2 class="text-light text-center"> Skills</h2>
 <hr />
 <div class="row text-light justify-content-center">
-    {% for skill in skills %}
+    {% for skill_set in skill_sets %}
         <div class="col-sm-12 col-md-2">
-            <h3 class="text-capitalize">{{skill.name}}</h3>
+            <h3 class="text-capitalize">{{skill_set.name}}</h3>
             <ul>
-                {% for sk in skill.skill %}
-                    <li>{{sk}}</li>
+                {% for skill in skill_set.skills %}
+                    <li>{{skill}}</li>
                 {% endfor %}
-                <li>aiasdasd</li>
             </ul>
         </div>
     {% endfor %}

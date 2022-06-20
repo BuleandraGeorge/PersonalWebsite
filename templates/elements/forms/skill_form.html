@@ -1,23 +1,35 @@
-<form class="card w-50 mx-auto mb-2" action="{{url_for('add_skill')}}" method="post" >
+<form class="card w-50 mx-auto mb-2" action="{{url_for('edit', asset='skill_set', asset_id=form_values._id) if form_values is defined else url_for('add_skill')}}" method="post" >
     <div class="card-body bg-dark text-white rounded">
         <h5 class="card-title text-center">Skill</h5>
         <div class="form-group ">
             <label for="skill_name">Skill Type</label>
-            <input type="text" class="form-control mb-2" name="skill_type" list="skill_types"/ required>
-            <datalist id="skill_types">
-                {%for skill in skills%}
-                <option>{{skill.Name}}</option>
-                {%endfor%}
-            </datalist>   
+            {% if form_values is defined %}
+                <input type="text" class="form-control mb-2" name="skill_type" value="{{form_values.name}}" required>
+            {% else %}
+                <input type="text" class="form-control mb-2" name="skill_type" list="skill_types"  required>
+                <datalist id="skill_types">
+                    {%for skill in skills%}
+                    <option>{{skill.name}}</option>
+                    {%endfor%}
+                </datalist>   
+            {% endif %}
+            
         </div>
         <div class="form-group">
             <label for="skill">Skill</label>
-            <input type="text" class="form-control mb-2" placeholder="Inset a skill" name="skill" required>
-            <div class="d-flex justify-content-between mb-2" id="skill_buttons">
-                <a id="add" class="btn btn-primary add"><i class="fa-solid fa-plus"></i></a>
-                <a id="del" class="btn btn-danger del"><i class="fa-solid fa-minus"></i></a>
-            </div>
+            {% if form_values is defined %}
+                {% for skill in form_values.skills %}
+                     <input type="text" class="form-control mb-2" placeholder="Inset a skill" value="{{skill}}" name="skill" required> 
+                {% endfor %}
+            {% else %}
+                 <input type="text" class="form-control mb-2" placeholder="Inset a skill" name="skill" required> 
+            {% endif %}
+           <div class="d-flex justify-content-between mb-2" id="skill_buttons">
+                    <a id="add" class="btn btn-primary add"><i class="fa-solid fa-plus"></i></a>
+                    <a id="del" class="btn btn-danger del"><i class="fa-solid fa-minus"></i></a>
+                </div>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 </form>
+<script src="{{url_for('static', filename='/js/add_del_logic.js')}}"></script>
