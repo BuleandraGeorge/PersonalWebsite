@@ -57,11 +57,11 @@
 	{% for goal in goals %}
 	<div class="card col border-primary m-2" style="max-width: 18rem; min-width:18rem ">
 		<div class="card-body text-primary">
-			<h5 class="card-title text-center text-truncate">{{goal.goal_title}}</h5>
+			<h5 class="card-title text-center text-truncate">{{goal.title}}</h5>
 			<hr>
 			<div class="d-flex justify-content-between">
 				<a href="{{url_for('delete', asset='goal', asset_id=goal._id)}}" class="btn btn-danger"> Delete</a>
-				<a href="#" class="btn btn-info ">Edit</a>
+				<a href="{{url_for('edit', asset='goal', asset_id=goal._id)}}" class="btn btn-info ">Edit</a>
 			</div>
 		</div>
 	</div>

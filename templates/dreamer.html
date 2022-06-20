@@ -4,12 +4,20 @@
 
 <h1 class="text-center text-light"> Aiming for </h1>
 {% for goal in main_goals %}
-	<h2 class="text-center text-light">{{goal.goal_title}}</h2>
+	{% if goal.isDone %}
+		<h2 class="text-center text-light text-decoration-line-through">{{goal.title}}</h2>
+	{% else %}
+		<h2 class="text-center text-light">{{goal.title}}</h2>
+	{% endif %}
 {% endfor %}
 <h1 class="text-center text-light"> Smaller Goals</h1>
 
-{% for goald in secondary_goals %}
-	<h2 class="text-center text-danger">{{goald.goal_title}}</h2>
+{% for goal in secondary_goals %}
+	{% if goal.isDone %}
+		<h2 class="text-center text-light text-decoration-line-through">{{goal.title}}</h2>
+	{% else %}
+		<h2 class="text-center text-light">{{goal.title}}</h2>
+	{% endif %}
 {% endfor %}
 
 {% endblock %}

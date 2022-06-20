@@ -19,7 +19,6 @@ function spypage() {
     let anchorList = getOptionList();
     anchorList.forEach(resetActive)
     let path = window.location.pathname;
-    console.log(path);
     if (path == "/") {
         anchorList[0].classList.add("active");
         return 0

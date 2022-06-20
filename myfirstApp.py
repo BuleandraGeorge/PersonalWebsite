@@ -36,8 +36,6 @@ def dreamer():
            main_goals.append(goal)
         else:
             secondary_goals.append(goal)
-    print(main_goals)
-    print(secondary_goals)
     return render_template("dreamer.html", main_goals=main_goals, secondary_goals=secondary_goals);
 
 @app.route("/cv")
@@ -107,7 +105,8 @@ def add_skill():
 @isOwner(database)
 def add_goal():
    newGoal = request.form.to_dict()
-   newGoal['isMain'] = True if request.form['isMain']=="on" else False
+   newGoal['isMain'] = True if 'isMain' in request.form.to_dict().keys() else False
+   newData['isDone'] = True if 'isDone' in request.form.to_dict().keys() else False
    database.dreams.insert_one(newGoal)
    return redirect(url_for('update_view'))
 
@@ -143,8 +142,19 @@ def list_assets():
 @isOwner(database)
 def delete(asset, asset_id):
     if asset=="project":
+        proj_pictures = database.projects.find_one({'_id':ObjectId(asset_id)})['project_pictures']
+        for pic in proj_pictures:
+           try:     
+               os.remove(app.config['UPLOAD_FOLDER']+"/"+pic)
+           except:
+               pass
         database.projects.delete_one({'_id':ObjectId(asset_id)})
     elif asset =="course":
+        course_picture = database.studies.find_one({'_id':ObjectId(asset_id)})['course_picture']
+        try:     
+            os.remove(app.config['UPLOAD_FOLDER']+"/"+course_picture)
+        except:
+            pass
         database.studies.delete_one({'_id':ObjectId(asset_id)})
     elif asset == "skill_set":
         database.skills.delete_one({'_id':ObjectId(asset_id)})
@@ -152,7 +162,7 @@ def delete(asset, asset_id):
         database.dreams.delete_one({'_id':ObjectId(asset_id)})
     return redirect(url_for('list_assets'))
 
-@app.route('/edit/<asset>/<asset_id>', methods=['GET', 'POST'])
+@app.route('/edit/<asset>/<asset_id>', methods=['GET','POST'])
 @isOwner(database)
 def edit(asset, asset_id):
     if asset=="project":
@@ -164,7 +174,6 @@ def edit(asset, asset_id):
             pictures = request.files.getlist('project_pictures')
             newPictures = list()
             deletePic = list()
-            print(newData)
             currentPictures = database.projects.find_one({'_id':ObjectId(asset_id)})['project_pictures']
             for picture in pictures: # if so add them in the storage
                 try:
@@ -203,7 +212,6 @@ def edit(asset, asset_id):
         return render_template('edit.html', form = 'elements/forms/course_form.html', form_values = course)
     elif asset == "skill_set":
         skill_set = database.skills.find_one({'_id':ObjectId(asset_id)})
-        print(skill_set)
         if request.method=="POST":
            newData = request.form.to_dict()
            newData['skills'] = request.form.getlist('skill')
@@ -211,7 +219,14 @@ def edit(asset, asset_id):
            return redirect(url_for('developer'))
         return render_template('edit.html', form = 'elements/forms/skill_form.html', form_values = skill_set)
     elif asset =="goal":
-        database.dreams.delete_one({'_id':ObjectId(asset_id)})
+        goal = database.dreams.find_one({'_id':ObjectId(asset_id)})
+        if request.method=="POST":
+           newData = request.form.to_dict()
+           newData['isMain'] = True if 'isMain' in request.form.to_dict().keys() else False
+           newData['isDone'] = True if 'isDone' in request.form.to_dict().keys() else False
+           database.dreams.update_one({'_id':ObjectId(asset_id)},{'$set':newData})
+           return redirect(url_for('dreamer'))
+        return render_template('edit.html', form = 'elements/forms/goal_form.html', form_values = goal)
     return redirect(url_for('list_assets'))
 
 
