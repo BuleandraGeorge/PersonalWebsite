@@ -3,6 +3,7 @@ from flask import Flask, render_template, send_from_directory, redirect, request
 from werkzeug.utils import secure_filename
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
+import smtplib
 from decorators import isOwner
 import os
 app = Flask(__name__)
@@ -230,6 +231,17 @@ def edit(asset, asset_id):
     return redirect(url_for('list_assets'))
 
 
-"""
-{{url_for('static', filename='images/'+ picture) for picture in form_values.project_pictures if form_values is defined }}
-"""
+@app.route('/send_email', methods=["POST"])
+def contact():
+    if request.method == "POST":
+        email = request.form.get('email')
+        message = request.form.get('message')
+        if message=="":
+            return redirect(url_for('index'))
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        server.login(os.environ["CONTACT_EMAIL"], os.environ["EMAIL_PASSWORD"])
+        message = 'Subject: {}\n\n{}\n\n Email send by {}'.format("Personal Website Contact", message, email)
+        server.sendmail(email, "buleandrageorge@gmail.com", message)
+    return redirect(url_for('index'))
+
