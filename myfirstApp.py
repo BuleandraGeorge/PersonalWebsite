@@ -245,3 +245,7 @@ def contact():
         server.sendmail(email, "buleandrageorge@gmail.com", message)
     return redirect(url_for('index'))
 
+@app.errorhandler(404)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return render_template('not_found_404.html'), 404

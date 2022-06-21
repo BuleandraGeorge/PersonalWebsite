@@ -26,7 +26,7 @@
                 </a>
             </div>
             <div class="col-4"> 
-                <a class="btn btn-danger">
+                <a class="btn btn-danger" onclick="scrollBot()">
                     <i class="fa-solid fa-envelope"></i>
                 </a>
             </div>
@@ -36,7 +36,12 @@
         {% block content %}{% endblock %}
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
-    
+    <script>
+        function scrollBot()
+        {
+            window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: "smooth" });
+        }
+    </script>
     {% block extra_js %}
     {% endblock %}
 
