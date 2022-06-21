@@ -42,39 +42,24 @@
 </div>
 <p class=" fs-1 text-center text-light my-5 ">Studies</p>
 <div class="row my-5">
+    {% for course in courses %}
     <div class="col-6">
-        <div class="card mb-3 mx-auto" style="max-width: 540px;">
+        <div class="card mb-3 mx-auto bg-dark text-light" style="max-width: 540px;">
             <div class="row g-0">
                 <div class="col-md-4">
-                    <img src="{{url_for('static', filename="images/dmu.png")}}" class="img-fluid rounded-start" alt="...">
+                    <img src="{{url_for('static', filename="images/"+course.course_picture)}}" class="img-fluid rounded-start" alt="course picture">
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                        <h5 class="card-title">{{course.course_name}}</h5>
+                        <p class="card-text text-truncate">{{course.description}}</p>
+                        <p class="card-text"><a href="{{url_for('student')}}" class="text-light">See details</a></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-6">
-        <div class="card mb-3 mx-auto" style="max-width: 540px;">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    <img src="{{url_for('static', filename="images/codeInstitute.jpeg")}}" class="img-fluid rounded-start" alt="...">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">Card title</h5>
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    {% endfor %}
 </div>
 
 

@@ -14,7 +14,7 @@ database = mongo.db
 OWNER_PASSWORD = '1234'
 @app.route("/")
 def index():
-    return render_template("index.html", projects=database.projects.find())
+    return render_template("index.html", projects=database.projects.find(), courses=database.studies.find())
 
 @app.route("/student")
 def student():
@@ -247,5 +247,4 @@ def contact():
 
 @app.errorhandler(404)
 def page_not_found(e):
-    # note that we set the 404 status explicitly
     return render_template('not_found_404.html'), 404
