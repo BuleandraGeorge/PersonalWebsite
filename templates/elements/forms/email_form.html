@@ -1,0 +1,15 @@
+<p class="fs-1 text-center text-light my-5">Would you like to hear more? </p>
+
+<form class="card m-auto fs-3 mb-5" style="width: 44%; height:30rem" action="{{url_for('contact')}}" method="POST">
+    <div class="card-body bg-dark text-light">
+        <div class="mb-3">
+            <label for="emailInput" class="form-label">Email address</label>
+            <input type="email" class="form-control bg-new-dark text-light" id="emailInput" placeholder="name@example.com" name="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="messageInput" class="form-label">Say hi</label>
+            <textarea class="form-control bg-new-dark text-light" id="messageInput" rows="12" name="message" required></textarea >
+        </div>
+        <button class="btn bg-new-dark text-light m-auto" type="submit">Send</button>
+    </div>
+</form>
