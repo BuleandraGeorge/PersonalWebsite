@@ -127,7 +127,7 @@ def login():
 @isOwner(database)
 def logout():
     database.owner.delete_many({"user_addr":str(request.remote_addr)})
-    return redirect('index')
+    return redirect(url_for('index'))
 
 @app.route('/list')
 @isOwner(database)
