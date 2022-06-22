@@ -21,7 +21,7 @@
                 </a>
             </div>
             <div class="col-4">
-                <a class="btn btn-info magnify" href="{{url_for("view_cv")}}" target="_blank"data-bs-toggle="tooltip" data-bs-placement="top" title="Check CV">
+                <a class="btn btn-info magnify" href="{{url_for('view_file', filetype='cv', file_id='0')}}" target="_blank"data-bs-toggle="tooltip" data-bs-placement="top" title="Check CV">
                     <i class="fa-solid fa-file"></i>
                 </a>
             </div>
@@ -32,6 +32,23 @@
             </div>
         </div>
     </div>
+   <div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+          <div class="toast-container p-3 top-0 end-0" id="toastPlacement">
+          {% for message in get_flashed_messages() %}
+            <div class="toast">
+              <div class="toast-body">
+                {{message}}
+              </div>
+            </div>
+          {% endfor %}
+            
+          </div>
+        </div>
+   </div>
+    <div class="flashed_messages">
+        
+        
+    </div>
     <div class="container-fluid px-5 mt-5">
         {% block content %}{% endblock %}
     </div>
@@ -41,8 +58,14 @@
         {
             window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: "smooth" });
         }
-        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    const toastElList = document.querySelectorAll('.toast')
+    const toastList = [...toastElList].map(toastEl => new bootstrap.Toast(toastEl, option))
+    for (toast in toastList)
+    {
+        toastList[toast].show();
+    }
     </script>
     {% block extra_js %}
     {% endblock %}

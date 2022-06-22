@@ -1,5 +1,5 @@
 from itertools import product
-from flask import Flask, render_template, send_from_directory, redirect, request, url_for, make_response, get_template_attribute
+from flask import Flask, render_template, send_from_directory, redirect, request, url_for, make_response, get_template_attribute, flash
 from werkzeug.utils import secure_filename
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
@@ -9,8 +9,10 @@ import os
 app = Flask(__name__)
 app.config["MONGO_URI"] = os.environ['MONGO_URI'].format(os.environ['DB_USERNAME'],os.environ['PASSWORD'], os.environ['DATABASE_NAME'])[1:-1]
 app.config['UPLOAD_FOLDER'] = './static/images'
+app.config['UPLOAD_DOC'] = './static/docs'
 mongo = PyMongo(app)
 database = mongo.db
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 OWNER_PASSWORD = '1234'
 @app.route("/")
 def index():
@@ -39,10 +41,15 @@ def dreamer():
             secondary_goals.append(goal)
     return render_template("dreamer.html", main_goals=main_goals, secondary_goals=secondary_goals);
 
-@app.route("/cv")
-def view_cv():
-    path = "./static/docs/"
-    return send_from_directory(path, 'cv_pdf.pdf')
+@app.route("/show/<filetype>/<file_id>")
+def view_file(filetype,file_id):
+    if (filetype=='cv'):
+        filename= database.cvs.find_one_or_404()['filename']
+    elif(filetype=="diploma"):
+        filename= database.diplomas.find_one_or_404({"_id":ObjectId(file_id)})['filename']
+    else:
+        return 404
+    return send_from_directory(app.config["UPLOAD_DOC"], filename)
 
 @app.route("/project/<string:project_id>")
 def project_view(project_id):
@@ -228,6 +235,24 @@ def edit(asset, asset_id):
            database.dreams.update_one({'_id':ObjectId(asset_id)},{'$set':newData})
            return redirect(url_for('dreamer'))
         return render_template('edit.html', form = 'elements/forms/goal_form.html', form_values = goal)
+    elif asset =="cv":
+        wrong_file_type = False
+        if request.method=="POST":
+           cv= request.files['cv']
+           if cv.filename.endswith('.pdf'):
+                currCv = database.cvs.find_one();
+                try:
+                    os.remove(app.config['UPLOAD_DOC']+"/"+ currCv['filename'])
+                except:
+                    pass
+                cv.save(os.path.join(app.config['UPLOAD_DOC'], secure_filename(cv.filename)))
+                database.cvs.update_one({},{"$set":{'filename':secure_filename(cv.filename)}})
+                flash("The cv has been updated")
+                return redirect(url_for('index'))
+           else:
+                flash("Wrong file type, the file has to be pdf");
+                return redirect(url_for('update_view'))
+        return redirect(url_for('update_view'))
     return redirect(url_for('list_assets'))
 
 
