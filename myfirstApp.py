@@ -14,7 +14,7 @@ database = mongo.db
 OWNER_PASSWORD = '1234'
 @app.route("/")
 def index():
-    return render_template("index.html", projects=database.projects.find(), courses=database.studies.find())
+    return render_template("index.html", projects=list(database.projects.find()), courses=list(database.studies.find()))
 
 @app.route("/student")
 def student():

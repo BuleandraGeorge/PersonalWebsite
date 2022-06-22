@@ -64,3 +64,49 @@ body {
 .dead{
     min-height:5vh;
 }
+._50height-viewport{
+   max-height:80vh;
+}
+.tale-title{
+    position:relative;
+    top:90%;
+    left:30%;
+    transform:translate(-50%, -50%);
+    font-size:2rem;
+    text-decoration:none !important;
+    color:#fff;
+}
+.tale-style{
+    text-decoration:none;
+}
+.project-scroll-buttons{
+    position: relative;
+    top: 10rem;
+    z-index: +1;
+}
+.magnify:hover{
+    animation-name:magnify;
+    animation-duration:1s;
+}
+.magnify:hover{
+    animation-name:magnify;
+    animation-duration:1s;
+}
+
+@keyframes magnify {
+  0% {transform: scale(1);}
+  50% {transform: scale(1.1);}
+  100% {transform: scale(1);}
+}
+
+.left-scroll-btn{
+    position:absolute;
+    left:0;
+}
+.right-scroll-btn{
+    position:absolute;
+    right:0%;
+}
+#projects::-webkit-scrollbar {
+  display: none;
+}

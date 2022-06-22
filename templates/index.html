@@ -3,53 +3,72 @@
 {% block title %} Lading Page {% endblock %}
 {% block content %}
 <div class="row mb-5">
-    <div class="col-lg-4">
-        <a href="{{url_for('student')}}">
-            <img src="{{url_for('static', filename='images/student.jpg')}}" class=" img-thumbnail" alt="...">
+    <div class="col-sm-12 col-md-4 magnify">
+        <a href="{{url_for('student')}}" class="tale-style">
+            <span class="tale-title">Student</span>
+            <img src="{{url_for('static', filename='images/student.jpg')}}" class="img-fluid _50height-viewport" alt="...">
+            
         </a>
     </div>
-    <div class="col-lg-4">
-        <a href="{{url_for('developer')}}">
-            <img src="{{url_for('static', filename='images/developer.jpg')}}" class="img-thumbnail" alt="...">
+    <div class="col-sm-12 col-md-4 magnify">
+        <a href="{{url_for('developer')}}" class="tale-style">
+            <span class="tale-title">Developer</span>
+            <img src="{{url_for('static', filename='images/developer.jpg')}}" class="img-fluid _50height-viewport" alt="...">
+            
         </a>
     </div>
-    <div class="col-lg-4 ">
-        <a href="{{url_for('dreamer')}}">
-            <img src="{{url_for('static', filename='images/dreamer.jpg')}}" class="img-thumbnail h-100" alt="...">
+    <div class="col-sm-12 col-md-4 magnify">
+        <a href="{{url_for('dreamer')}}"class="tale-style">
+            <span class="tale-title">Dreamer</span>
+            <img src="{{url_for('static', filename='images/dreamer.jpg')}}" class="img-fluid _50height-viewport" alt="...">
         </a>
     </div>
 </div>
 
 <p class=" fs-1 text-center text-light my-5">Work</p>
-<div class="container mandatory-scroll-snapping my-5">
-    {% for project in projects %}
-        <div class="item">
-            <div class="card bg-dark text-white">
-            {% if project.project_pictures|length == 0 %}
-             <img src="{{url_for('static', filename='images/image-not-found.jpg')}}" class="card-img-top" alt="picture-project">
-            {% else %}
-                <img src="{{url_for('static', filename='images/' + project.project_pictures[0])}}" class="card-img-top" alt="picture-project">
-            {% endif %}
+<div>
+    <div class="project-scroll-buttons">
+         <a class="btn btn-light btn-scroll left-scroll-btn bg-dark text-light" onclick="scrolllLeft()"><i class="fa-solid fa-angle-left"></i></a>
+        <a class="btn btn-light btn-scroll right-scroll-btn bg-dark text-light" onclick="scrollRight()"><i class="fa-solid fa-angle-right"></i></a>
+        </div> 
+    <div class="container mandatory-scroll-snapping my-5" id="projects">
+        {% if projects|length > 0 %}
+  
+        {% for project in projects %}
+            <div class="item">
+                <div class="card bg-dark text-white">
+                {% if project.project_pictures|length == 0 %}
+                 <img src="{{url_for('static', filename='images/image-not-found.jpg')}}" class="card-img-top" alt="picture-project">
+                {% else %}
+                    <img src="{{url_for('static', filename='images/' + project.project_pictures[0])}}" class="card-img-top" alt="picture-project">
+                {% endif %}
                 
-                <div class="card-body">
-                    <h5 class="card-title">{{project.project_name}}</h5>
-                    <p class="card-text text-truncate">{{project.project_description}}.</p>
-                    <a href="{{url_for('project_view', project_id=project._id)}}" class="btn btn-primary">See Details</a>
+                    <div class="card-body">
+                        <h5 class="card-title">{{project.project_name}}</h5>
+                        <p class="card-text text-truncate">{{project.project_description}}.</p>
+                        <a href="{{url_for('project_view', project_id=project._id)}}" class="btn btn-primary">See Details</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+
+        {% else %}
+            <h3 class="text-center text-light w-100">No work could be find, contact the owner for details at the contact form provided</h3>
+        {% endif %}
+    </div>
 </div>
+ 
 <p class=" fs-1 text-center text-light my-5 ">Studies</p>
 <div class="row my-5">
+    {% if courses|length> 0 %}
     {% for course in courses %}
-    <div class="col-6">
+    <div class="col-sm-12 col-md-6">
         <div class="card mb-3 mx-auto bg-dark text-light" style="max-width: 540px;">
             <div class="row g-0">
-                <div class="col-md-4">
-                    <img src="{{url_for('static', filename="images/"+course.course_picture)}}" class="img-fluid rounded-start" alt="course picture">
+                <div class="col-4">
+                    <img src="{{url_for('static', filename="images/"+course.course_picture)}}" class="img-fluid rounded-start my-sm-3 my-lg-0" alt="course picture">
                 </div>
-                <div class="col-md-8">
+                <div class="col-8">
                     <div class="card-body">
                         <h5 class="card-title">{{course.course_name}}</h5>
                         <p class="card-text text-truncate">{{course.description}}</p>
@@ -60,9 +79,29 @@
         </div>
     </div>
     {% endfor %}
+    {% else %}
+    <h3 class="text-center text-light">No studies could be find, contact the owner for details at the contact form provided</h3>
+    {% endif %}
+
 </div>
 
 
 <p class="fs-1 text-center text-light my-5">In five years from now I'll be a machine learning engineer </p>
 {% include "elements/forms/email_form.html"%}
+{% endblock %}
+{% block extra_js %}
+<script>
+    function scrolllLeft()
+    {
+        let projectContainer = document.getElementById('projects')
+        let value =  projectContainer.scrollLeft;
+        projectContainer.scrollTo({ left : value-330, behavior: "smooth" });
+    }
+      function scrollRight()
+    {
+        let projectContainer = document.getElementById('projects')
+        let value =  projectContainer.scrollLeft;
+        projectContainer.scrollTo({ left : value+330, behavior: "smooth" });
+    }
+</script>
 {% endblock %}
