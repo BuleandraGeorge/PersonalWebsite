@@ -21,10 +21,16 @@
                     {% for class in study.class %}
                     <p class="m-0">{{class}}</p>
                     {% endfor %}
+                    
+                {% if study.course_diploma is defined %}
+                    <h5>Diploma</h5>
+                    <a href="{{url_for('view_file', filetype='diploma', file_id=study._id)}}" target='_blank'>See diploma</a>
+                {% endif %} 
                 </div>
                 <div class="col-4 d-flex justify-content-center">
                     <img src="{{url_for('static', filename='images/'+study.course_picture)}}" class="img-fluid" alt="...">
                 </div>
+                
             </div>
         </div>
     </div>

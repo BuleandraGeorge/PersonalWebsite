@@ -46,7 +46,7 @@ def view_file(filetype,file_id):
     if (filetype=='cv'):
         filename= database.cvs.find_one_or_404()['filename']
     elif(filetype=="diploma"):
-        filename= database.diplomas.find_one_or_404({"_id":ObjectId(file_id)})['filename']
+        filename= database.studies.find_one_or_404({"_id":ObjectId(file_id)})['course_diploma']
     else:
         return 404
     return send_from_directory(app.config["UPLOAD_DOC"], filename)
@@ -84,9 +84,13 @@ def add_course():
    newCourse = request.form.to_dict()
    newCourse['class'] = request.form.getlist('class')
    picture = request.files['course_picture']
+   diploma = request.files['course_diploma']
    picture.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(picture.filename)))
+   diploma.save(os.path.join(app.config['UPLOAD_DOC'], secure_filename(diploma.filename)))
    newCourse['course_picture'] = secure_filename(picture.filename)
+   newCourse['course_diploma'] = secure_filename(diploma.filename)
    database.studies.insert_one(newCourse)
+   flash("{} has been added to courses".format(newCourse['course_name']))
    return redirect(url_for('update_view'))
 
 @app.route("/add_skill",methods=["POST"])
@@ -159,8 +163,13 @@ def delete(asset, asset_id):
         database.projects.delete_one({'_id':ObjectId(asset_id)})
     elif asset =="course":
         course_picture = database.studies.find_one({'_id':ObjectId(asset_id)})['course_picture']
+        course_diploma = database.studies.find_one({'_id':ObjectId(asset_id)})['course_diploma']
         try:     
             os.remove(app.config['UPLOAD_FOLDER']+"/"+course_picture)
+        except:
+            pass
+        try:     
+            os.remove(app.config['UPLOAD_DOC']+"/"+course_diploma)
         except:
             pass
         database.studies.delete_one({'_id':ObjectId(asset_id)})
@@ -209,12 +218,27 @@ def edit(asset, asset_id):
            newData = request.form.to_dict()
            newData['class'] = request.form.getlist('class')
            picture = request.files['course_picture']
-           try:
-                picture.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(picture.filename)))
-                os.remove(app.config['UPLOAD_FOLDER']+"/"+ course['course_picture'])
-                newData['course_picture'] = secure_filename(picture.filename)
-           except:
-                pass
+           if picture.filename!="":
+               try:
+                    os.remove(app.config['UPLOAD_FOLDER']+"/"+ course['course_picture'])
+               except:
+                    pass
+               try:
+                    picture.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(picture.filename)))
+                    newData['course_picture'] = secure_filename(picture.filename)
+               except:
+                    pass
+           diploma = request.files['course_diploma']
+           if diploma.filename!="":
+               try:
+                    os.remove(app.config['UPLOAD_DOC']+"/"+ course['course_diploma'])
+               except:
+                    pass
+               try:
+                    diploma.save(os.path.join(app.config['UPLOAD_DOC'], secure_filename(diploma.filename)))  
+                    newData['course_diploma'] = secure_filename(diploma.filename)
+               except:
+                    pass
            database.studies.update_one({"_id":ObjectId(asset_id)},  {"$set":newData})
            return redirect(url_for('student'))
         return render_template('edit.html', form = 'elements/forms/course_form.html', form_values = course)
