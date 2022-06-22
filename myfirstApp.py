@@ -76,6 +76,7 @@ def add_project():
        project['project_pictures'].append(secure_filename(picture.filename))
        picture.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
    database.projects.insert_one(project)
+   flash('{} has been added at collection'.format(project['project_name']))
    return redirect(url_for('update_view'))
 
 @app.route("/add_course",methods=["POST"])
@@ -90,7 +91,7 @@ def add_course():
    newCourse['course_picture'] = secure_filename(picture.filename)
    newCourse['course_diploma'] = secure_filename(diploma.filename)
    database.studies.insert_one(newCourse)
-   flash("{} has been added to courses".format(newCourse['course_name']))
+   flash("{} has been added at collection ".format(newCourse['course_name']))
    return redirect(url_for('update_view'))
 
 @app.route("/add_skill",methods=["POST"])
@@ -105,12 +106,14 @@ def add_skill():
        myquery = {"skills": skill_type['skills']}
        newvalues = { "$set":{'skills':skills} }
        database.skills.update_one(myquery, newvalues )
+       flash('{} has been updated'.format(project['skill_type']))
    else:
        newEntry ={
            "name":newSkill['skill_type'],
            "skills":newSkill['skill']
            }
        database.skills.insert_one(newEntry)
+       flash('{} has been added at collection'.format(project['skill_type']))
    return redirect(url_for('update_view'))
 
 @app.route("/add_goal",methods=["POST"])
@@ -120,6 +123,7 @@ def add_goal():
    newGoal['isMain'] = True if 'isMain' in request.form.to_dict().keys() else False
    newData['isDone'] = True if 'isDone' in request.form.to_dict().keys() else False
    database.dreams.insert_one(newGoal)
+   flash('{} has been added at collection'.format(project['skill_type']))
    return redirect(url_for('update_view'))
 
 @app.route("/login", methods=['POST', 'GET'])
@@ -127,10 +131,13 @@ def login():
     if request.method =="POST":
         if request.form['password'] == OWNER_PASSWORD:
             database.owner.insert_one({"user_addr":request.remote_addr})
+            flash("Welcome back owner")
             return redirect((url_for('update_view')))
         else:
+            flash("The password is wrong")
             return render_template('login.html', wrong_password=True,)
     if database.owner.find_one({"user_addr":str(request.remote_addr)}):
+        flash("You are already logged in")
         return redirect('update')
     return render_template('login.html', wrong_password=False)
 
@@ -138,6 +145,7 @@ def login():
 @isOwner(database)
 def logout():
     database.owner.delete_many({"user_addr":str(request.remote_addr)})
+    flash("You has been logged out")
     return redirect(url_for('index'))
 
 @app.route('/list')
@@ -160,6 +168,7 @@ def delete(asset, asset_id):
                os.remove(app.config['UPLOAD_FOLDER']+"/"+pic)
            except:
                pass
+        flash("Project has been removed")
         database.projects.delete_one({'_id':ObjectId(asset_id)})
     elif asset =="course":
         course_picture = database.studies.find_one({'_id':ObjectId(asset_id)})['course_picture']
@@ -172,10 +181,13 @@ def delete(asset, asset_id):
             os.remove(app.config['UPLOAD_DOC']+"/"+course_diploma)
         except:
             pass
+        flash("Course has been removed")
         database.studies.delete_one({'_id':ObjectId(asset_id)})
     elif asset == "skill_set":
+        flash("Skill_set has been removed")
         database.skills.delete_one({'_id':ObjectId(asset_id)})
     elif asset =="goal":
+        flash("Goal has been removed")
         database.dreams.delete_one({'_id':ObjectId(asset_id)})
     return redirect(url_for('list_assets'))
 
@@ -209,6 +221,7 @@ def edit(asset, asset_id):
                 newData.pop('delete_picture')
             newData['project_pictures'] = newPictures + currentPictures # new set of pictures equals the union between new and current pictures left
             database.projects.update_one({"_id":ObjectId(asset_id)},  {"$set":newData})
+            flash("Project has been updated")
             return redirect(url_for('project_view', project_id = asset_id ))
         project = database.projects.find_one({'_id':ObjectId(asset_id)})
         return render_template('edit.html', form = "elements/forms/project_form.html" , form_values = project)
@@ -239,6 +252,7 @@ def edit(asset, asset_id):
                     newData['course_diploma'] = secure_filename(diploma.filename)
                except:
                     pass
+           flash("Course has been updated")
            database.studies.update_one({"_id":ObjectId(asset_id)},  {"$set":newData})
            return redirect(url_for('student'))
         return render_template('edit.html', form = 'elements/forms/course_form.html', form_values = course)
@@ -248,6 +262,7 @@ def edit(asset, asset_id):
            newData = request.form.to_dict()
            newData['skills'] = request.form.getlist('skill')
            database.skills.update_one({'_id':ObjectId(asset_id)},{'$set':newData})
+           flash("Skill set has been updated")
            return redirect(url_for('developer'))
         return render_template('edit.html', form = 'elements/forms/skill_form.html', form_values = skill_set)
     elif asset =="goal":
@@ -257,6 +272,7 @@ def edit(asset, asset_id):
            newData['isMain'] = True if 'isMain' in request.form.to_dict().keys() else False
            newData['isDone'] = True if 'isDone' in request.form.to_dict().keys() else False
            database.dreams.update_one({'_id':ObjectId(asset_id)},{'$set':newData})
+           flash("Goal has been updated")
            return redirect(url_for('dreamer'))
         return render_template('edit.html', form = 'elements/forms/goal_form.html', form_values = goal)
     elif asset =="cv":
@@ -286,12 +302,14 @@ def contact():
         email = request.form.get('email')
         message = request.form.get('message')
         if message=="":
+            flash("The email has to have a message")
             return redirect(url_for('index'))
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls()
         server.login(os.environ["CONTACT_EMAIL"], os.environ["EMAIL_PASSWORD"])
         message = 'Subject: {}\n\n{}\n\n Email send by {}'.format("Personal Website Contact", message, email)
         server.sendmail(email, "buleandrageorge@gmail.com", message)
+    flash("The email has been send")
     return redirect(url_for('index'))
 
 @app.errorhandler(404)

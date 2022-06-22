@@ -32,10 +32,10 @@
             </div>
         </div>
     </div>
-   <div aria-live="polite" aria-atomic="true" class="bg-dark position-relative bd-example-toasts">
+   <div aria-live="polite" aria-atomic="true" class="position-relative bd-example-toasts">
           <div class="toast-container p-3 top-0 end-0" id="toastPlacement">
           {% for message in get_flashed_messages() %}
-            <div class="toast">
+            <div class="toast bg-info">
               <div class="toast-body">
                 {{message}}
               </div>
