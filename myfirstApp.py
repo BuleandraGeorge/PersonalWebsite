@@ -12,8 +12,8 @@ app.config['UPLOAD_FOLDER'] = './static/images'
 app.config['UPLOAD_DOC'] = './static/docs'
 mongo = PyMongo(app)
 database = mongo.db
-app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
-OWNER_PASSWORD = '1234'
+app.secret_key = os.environ["APP_SECRET_KEY"]
+OWNER_PASSWORD = os.environ['OWNER_PASSWORD']
 @app.route("/")
 def index():
     return render_template("index.html", projects=list(database.projects.find()), courses=list(database.studies.find()))
