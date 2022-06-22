@@ -16,17 +16,17 @@
     <div class="shortcuts_buttons">
         <div class="row">
             <div class="col-4">
-                <a class="btn btn-info magnify" href="https://www.linkedin.com/in/george-buleandra-2a742713b/" target="_blank">
+                <a class="btn btn-info magnify" href="https://www.linkedin.com/in/george-buleandra-2a742713b/" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="Check Linkdin Profile">
                     <i class="fa-brands fa-linkedin"></i>
                 </a>
             </div>
             <div class="col-4">
-                <a class="btn btn-warning magnify" href="{{url_for("view_cv")}}" target="_blank">
+                <a class="btn btn-info magnify" href="{{url_for("view_cv")}}" target="_blank"data-bs-toggle="tooltip" data-bs-placement="top" title="Check CV">
                     <i class="fa-solid fa-file"></i>
                 </a>
             </div>
             <div class="col-4"> 
-                <a class="btn btn-danger magnify" onclick="scrollBot()">
+                <a class="btn btn-info magnify" onclick="scrollBot()" data-bs-toggle="tooltip" data-bs-placement="top" title="Get in touch">
                     <i class="fa-solid fa-envelope"></i>
                 </a>
             </div>
@@ -41,6 +41,8 @@
         {
             window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: "smooth" });
         }
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
     </script>
     {% block extra_js %}
     {% endblock %}

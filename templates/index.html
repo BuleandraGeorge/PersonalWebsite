@@ -6,21 +6,21 @@
     <div class="col-sm-12 col-md-4 magnify">
         <a href="{{url_for('student')}}" class="tale-style">
             <span class="tale-title">Student</span>
-            <img src="{{url_for('static', filename='images/student.jpg')}}" class="img-fluid _50height-viewport" alt="...">
+            <img src="{{url_for('static', filename='images/student.jpg')}}" class="img-fluid _50height-viewport" alt="..."  data-bs-toggle="tooltip" data-bs-placement="top" title="Click for Details">
             
         </a>
     </div>
     <div class="col-sm-12 col-md-4 magnify">
         <a href="{{url_for('developer')}}" class="tale-style">
             <span class="tale-title">Developer</span>
-            <img src="{{url_for('static', filename='images/developer.jpg')}}" class="img-fluid _50height-viewport" alt="...">
+            <img src="{{url_for('static', filename='images/developer.jpg')}}" class="img-fluid _50height-viewport" alt="..." data-bs-toggle="tooltip" data-bs-placement="top" title="Click for Details">
             
         </a>
     </div>
     <div class="col-sm-12 col-md-4 magnify">
         <a href="{{url_for('dreamer')}}"class="tale-style">
             <span class="tale-title">Dreamer</span>
-            <img src="{{url_for('static', filename='images/dreamer.jpg')}}" class="img-fluid _50height-viewport" alt="...">
+            <img src="{{url_for('static', filename='images/dreamer.jpg')}}" class="img-fluid _50height-viewport" alt="..." data-bs-toggle="tooltip" data-bs-placement="top" title="Click for Details">
         </a>
     </div>
 </div>
@@ -46,7 +46,7 @@
                     <div class="card-body">
                         <h5 class="card-title">{{project.project_name}}</h5>
                         <p class="card-text text-truncate">{{project.project_description}}.</p>
-                        <a href="{{url_for('project_view', project_id=project._id)}}" class="btn btn-primary">See Details</a>
+                        <a href="{{url_for('project_view', project_id=project._id)}}" class="btn btn-info">See Details</a>
                     </div>
                 </div>
             </div>
@@ -103,5 +103,6 @@
         let value =  projectContainer.scrollLeft;
         projectContainer.scrollTo({ left : value+330, behavior: "smooth" });
     }
+    
 </script>
 {% endblock %}
