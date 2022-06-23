@@ -110,3 +110,24 @@ body {
 #projects::-webkit-scrollbar {
   display: none;
 }
+/* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #3b3b3b #707070;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #707070;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #3b3b3b;
+    border-radius: 14px;
+    border: 0px solid #3b3b3b;
+  }
