@@ -125,3 +125,7 @@ body {
 .margin-top{
     min-height:7rem;
     }
+
+@media screen and (min-width: 992px)
+{
+}
