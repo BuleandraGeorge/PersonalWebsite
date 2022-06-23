@@ -24,22 +24,21 @@
 </div>
 
 <p class=" fs-1 text-center text-light my-5">Work</p>
-<div>
-    <div class="project-scroll-buttons">
+   <div class="project-scroll-buttons d-sm-none d-lg-block">
          <a class="btn btn-light btn-scroll left-scroll-btn bg-dark text-light" onclick="scrolllLeft()"><i class="fa-solid fa-angle-left"></i></a>
         <a class="btn btn-light btn-scroll right-scroll-btn bg-dark text-light" onclick="scrollRight()"><i class="fa-solid fa-angle-right"></i></a>
-        </div> 
-    <div class="container mandatory-scroll-snapping my-5" id="projects">
+    </div> 
+    <div class="project-container mandatory-scroll-snapping my-5" id="projects">
         {% if projects|length > 0 %}
   
         {% for project in projects %}
             <div class="item">
                 <div class="card bg-dark text-white">
-                {% if project.project_pictures|length == 0 %}
-                 <img src="{{url_for('static', filename='images/image-not-found.jpg')}}" class="card-img-top" alt="picture-project">
-                {% else %}
-                    <img src="{{url_for('static', filename='images/' + project.project_pictures[0])}}" class="card-img-top" alt="picture-project">
-                {% endif %}
+                    {% if project.project_pictures|length == 0 %}
+                     <img src="{{url_for('static', filename='images/image-not-found.jpg')}}" class="card-img-top" alt="picture-project">
+                    {% else %}
+                        <img src="{{url_for('static', filename='images/' + project.project_pictures[0])}}" class="card-img-top" alt="picture-project">
+                    {% endif %}
                 
                     <div class="card-body">
                         <h5 class="card-title">{{project.project_name}}</h5>
@@ -54,17 +53,16 @@
             <h3 class="text-center text-light w-100">No work could be find, contact the owner for details at the contact form provided</h3>
         {% endif %}
     </div>
-</div>
  
 <p class=" fs-1 text-center text-light my-5 ">Studies</p>
 <div class="row my-5">
     {% if courses|length> 0 %}
     {% for course in courses %}
-    <div class="col-sm-12 col-md-6">
+    <div class="col-sm-12 col-md-6 col-lg-4">
         <div class="card mb-3 mx-auto bg-dark text-light" style="max-width: 540px;">
             <div class="row g-0">
                 <div class="col-4">
-                    <img src="{{url_for('static', filename="images/"+course.course_picture)}}" class="img-fluid rounded-start my-sm-3 my-lg-0" alt="course picture">
+                    <img src="{{url_for('static', filename="images/"+course.course_picture)}}" class="img-fluid rounded-start my-sm-3 my-lg-0 h-100" style="min-height:12rem;" alt="course picture">
                 </div>
                 <div class="col-8">
                     <div class="card-body">

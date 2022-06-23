@@ -29,6 +29,10 @@
                     <a id="del" class="btn btn-danger del"><i class="fa-solid fa-minus"></i></a>
                 </div>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+         <div class="form-group">
+            <label for="no_order">Number of order</label>
+            <input type="number" class="form-control" name="no_order" value="{{ form_values.no_order if form_values is defined }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary my-2">Submit</button>
     </div>
 </form>
