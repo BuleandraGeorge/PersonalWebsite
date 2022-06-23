@@ -1,23 +1,27 @@
 {% extends "base.html" %}
-
+{% block page_title %}Dreamer  {% endblock %}
 {% block content %}
-
-<h1 class="text-center text-light"> Aiming for </h1>
-{% for goal in main_goals %}
-	{% if goal.isDone %}
-		<h2 class="text-center text-light text-decoration-line-through">{{goal.title}}</h2>
-	{% else %}
-		<h2 class="text-center text-light">{{goal.title}}</h2>
-	{% endif %}
-{% endfor %}
-<h1 class="text-center text-light"> Smaller Goals</h1>
-
-{% for goal in secondary_goals %}
-	{% if goal.isDone %}
-		<h2 class="text-center text-light text-decoration-line-through">{{goal.title}}</h2>
-	{% else %}
-		<h2 class="text-center text-light">{{goal.title}}</h2>
-	{% endif %}
-{% endfor %}
+	<h4 class="text-center text-light">Long term goals </h4>
+	{% for goal in main_goals %}
+		{% if not goal.isDone %}
+			<h2 class="mx-5 text-light text-center">{{goal.title}}</h2>
+		{% endif %}
+	{% endfor %}
+	{% for goal in main_goals %}
+		{% if goal.isDone %}
+			<h2 class="mx-5 text-light text-decoration-line-through text-center">{{goal.title}}</h2>
+		{% endif %}
+	{% endfor %}
+	<h4 class="text-center text-light mt-5">Short term goals </h4>
+	{% for goal in secondary_goals %}
+		{% if not goal.isDone %}
+			<h2 class="mx-5 text-light text-center">{{goal.title}}</h2>
+		{% endif %}
+	{% endfor %}
+	{% for goal in secondary_goals %}
+		{% if goal.isDone %}
+			<h2 class="mx-5 text-light text-decoration-line-through text-center">{{goal.title}}</h2>
+		{% endif %}
+	{% endfor %}
 {% include "elements/forms/email_form.html"%}
 {% endblock %}

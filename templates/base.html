@@ -12,7 +12,7 @@
 </head>
 <body class="pb-5">
     {% include "elements/nav-bar.html "%}
-    <div class="dead">asd</div>
+    <div class="margin-top"></div>
     <div class="shortcuts_buttons">
         <div class="row">
             <div class="col-4">
@@ -45,11 +45,8 @@
           </div>
         </div>
    </div>
-    <div class="flashed_messages">
-        
-        
-    </div>
-    <div class="container-fluid px-5 mt-5">
+    <h1 class="text-light text-center">{% block page_title %}{% endblock %}</h1>
+     <div class="container-fluid px-5 mt-5">    
         {% block content %}{% endblock %}
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>

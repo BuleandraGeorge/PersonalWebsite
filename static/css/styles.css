@@ -61,8 +61,8 @@ body {
     left:85%;
     z-index:1;
 }
-.dead{
-    min-height:5vh;
+.margin-top{
+    min-height:15vh;
 }
 ._50height-viewport{
    max-height:80vh;

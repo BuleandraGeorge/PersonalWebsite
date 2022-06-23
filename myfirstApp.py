@@ -121,9 +121,9 @@ def add_skill():
 def add_goal():
    newGoal = request.form.to_dict()
    newGoal['isMain'] = True if 'isMain' in request.form.to_dict().keys() else False
-   newData['isDone'] = True if 'isDone' in request.form.to_dict().keys() else False
+   newGoal['isDone'] = True if 'isDone' in request.form.to_dict().keys() else False
    database.dreams.insert_one(newGoal)
-   flash('{} has been added at collection'.format(project['skill_type']))
+   flash('{} has been added at collection'.format(newGoal['title']))
    return redirect(url_for('update_view'))
 
 @app.route("/login", methods=['POST', 'GET'])
