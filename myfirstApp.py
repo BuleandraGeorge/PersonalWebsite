@@ -106,14 +106,14 @@ def add_skill():
        myquery = {"skills": skill_type['skills']}
        newvalues = { "$set":{'skills':skills} }
        database.skills.update_one(myquery, newvalues )
-       flash('{} has been updated'.format(project['skill_type']))
+       flash('{} has been updated'.format(skill_type['name']))
    else:
        newEntry ={
            "name":newSkill['skill_type'],
            "skills":newSkill['skill']
            }
        database.skills.insert_one(newEntry)
-       flash('{} has been added at collection'.format(project['skill_type']))
+       flash('{} has been added at collection'.format(newEntry['name']))
    return redirect(url_for('update_view'))
 
 @app.route("/add_goal",methods=["POST"])

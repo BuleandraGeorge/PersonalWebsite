@@ -20,14 +20,6 @@ body {
 #shortcuts{
     width:4rem;
 }
-.thing-container{
-}
-.thing {
-    height: 300px;
-    width: 300px;
-    background-color: blue;
-    border: 1px solid red;
-}
 .carousel {
    scroll-snap-type:x mandatory;
    scroll-padding: 0 24px;
@@ -61,9 +53,7 @@ body {
     left:85%;
     z-index:1;
 }
-.margin-top{
-    min-height:15vh;
-}
+
 ._50height-viewport{
    max-height:80vh;
 }
@@ -131,3 +121,7 @@ body {
     border-radius: 14px;
     border: 0px solid #3b3b3b;
   }
+
+.margin-top{
+    min-height:7rem;
+    }

@@ -4,9 +4,9 @@
 
 <h2 class="text-light text-center"> Skills</h2>
 <hr />
-<div class="row text-light justify-content-center">
+<div class="row text-light">
     {% for skill_set in skill_sets %}
-        <div class="col-sm-12 col-md-2">
+        <div class="col-sm-6 col-md-4 col-lg-3">
             <h3 class="text-capitalize">{{skill_set.name}}</h3>
             <ul>
                 {% for skill in skill_set.skills %}
@@ -21,7 +21,7 @@
 <hr />
 <p class="text-light text-center">This is my work gather so far in last 3 year of studies</p>
 
-<div class="row row-cols-1 row-cols-md-3 g-4">
+<div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-4">
     {% for project in projects %}
     <div class="col">
         <div class="card bg-dark text-white h-100">
