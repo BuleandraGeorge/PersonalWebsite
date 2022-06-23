@@ -25,7 +25,7 @@ body {
    scroll-padding: 0 24px;
    overflow:auto;
 }
-.container {
+.project-container {
     display: flex;
     overflow: auto;
     flex: none;
@@ -125,7 +125,3 @@ body {
 .margin-top{
     min-height:7rem;
     }
-
-@media screen and (min-width: 992px)
-{
-}
