@@ -21,11 +21,13 @@ def index():
 @app.route("/student")
 def student():
     studies = list(database.studies.find())
+    studies.sort(key=lambda course:course['no_order'])
     return render_template("student.html",studies=studies);
 
 @app.route("/developer")
 def developer():
     projects = list(database.projects.find())
+    projects.sort(key=lambda project:project['no_order'])
     skills=list(database.skills.find())
     return render_template("developer.html", projects = projects, skill_sets=skills);
 
@@ -37,8 +39,10 @@ def dreamer():
     for goal in goals:
         if goal['isMain']:
            main_goals.append(goal)
+           main_goals.sort(key=lambda goal:goal['no_order'])
         else:
             secondary_goals.append(goal)
+            secondary_goals.sort(key=lambda goal:goal['no_order'])
     return render_template("dreamer.html", main_goals=main_goals, secondary_goals=secondary_goals);
 
 @app.route("/show/<filetype>/<file_id>")
@@ -70,6 +74,7 @@ def add_project():
    project['technologies'] = request.form.getlist('technologies')
    project['others_project'] = request.form.getlist('others_project')
    project['project_pictures'] = list()
+   project['no_order'] = int(request.form['no_order'])
    pictures = request.files.getlist('project_pictures')
    for picture in pictures:
        filename = secure_filename(picture.filename)
@@ -84,6 +89,7 @@ def add_project():
 def add_course():
    newCourse = request.form.to_dict()
    newCourse['class'] = request.form.getlist('class')
+   newCourse['no_order'] = int(request.form['no_order'])
    picture = request.files['course_picture']
    diploma = request.files['course_diploma']
    picture.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(picture.filename)))
@@ -122,6 +128,7 @@ def add_goal():
    newGoal = request.form.to_dict()
    newGoal['isMain'] = True if 'isMain' in request.form.to_dict().keys() else False
    newGoal['isDone'] = True if 'isDone' in request.form.to_dict().keys() else False
+   newGoal['no_order'] = int(newGoal['no_order'])
    database.dreams.insert_one(newGoal)
    flash('{} has been added at collection'.format(newGoal['title']))
    return redirect(url_for('update_view'))
@@ -200,6 +207,7 @@ def edit(asset, asset_id):
             newData['features'] = request.form.getlist('features')
             newData['technologies'] = request.form.getlist('technologies')
             newData['others_project'] = request.form.getlist('others_project')
+            newData['no_order'] = int(newData['no_order'])
             pictures = request.files.getlist('project_pictures')
             newPictures = list()
             deletePic = list()
@@ -230,6 +238,7 @@ def edit(asset, asset_id):
         if request.method=="POST":
            newData = request.form.to_dict()
            newData['class'] = request.form.getlist('class')
+           newData['no_order'] = int(newData['no_order'])
            picture = request.files['course_picture']
            if picture.filename!="":
                try:
@@ -271,6 +280,7 @@ def edit(asset, asset_id):
            newData = request.form.to_dict()
            newData['isMain'] = True if 'isMain' in request.form.to_dict().keys() else False
            newData['isDone'] = True if 'isDone' in request.form.to_dict().keys() else False
+           newData['no_order'] = int(newData['no_order'])
            database.dreams.update_one({'_id':ObjectId(asset_id)},{'$set':newData})
            flash("Goal has been updated")
            return redirect(url_for('dreamer'))
