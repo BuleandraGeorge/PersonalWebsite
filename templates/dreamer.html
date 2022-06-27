@@ -2,26 +2,34 @@
 {% block page_title %}Dreamer  {% endblock %}
 {% block content %}
 	<h4 class="text-center text-light">Long term goals </h4>
-	{% for goal in main_goals %}
-		{% if not goal.isDone %}
-			<h2 class="mx-5 text-light text-center">{{goal.title}}</h2>
-		{% endif %}
-	{% endfor %}
-	{% for goal in main_goals %}
-		{% if goal.isDone %}
-			<h2 class="mx-5 text-light text-decoration-line-through text-center">{{goal.title}}</h2>
-		{% endif %}
-	{% endfor %}
+	{% if main_goals|length > 0%}
+		{% for goal in main_goals %}
+			{% if not goal.isDone %}
+				<h2 class="mx-5 text-light text-center">{{goal.title}}</h2>
+			{% endif %}
+		{% endfor %}
+		{% for goal in main_goals %}
+			{% if goal.isDone %}
+				<h2 class="mx-5 text-light text-decoration-line-through text-center">{{goal.title}}</h2>
+			{% endif %}
+		{% endfor %}
+	{% else %}
+		<h3 class="text-center text-light w-100">No goals found, contant me for details at contact form provided</h3>
+	{% endif %}
 	<h4 class="text-center text-light mt-5">Short term goals </h4>
-	{% for goal in secondary_goals %}
-		{% if not goal.isDone %}
-			<h2 class="mx-5 text-light text-center">{{goal.title}}</h2>
-		{% endif %}
-	{% endfor %}
-	{% for goal in secondary_goals %}
-		{% if goal.isDone %}
-			<h2 class="mx-5 text-light text-decoration-line-through text-center">{{goal.title}}</h2>
-		{% endif %}
-	{% endfor %}
+	{% if secondary_goals %}
+		{% for goal in secondary_goals %}
+			{% if not goal.isDone %}
+				<h2 class="mx-5 text-light text-center">{{goal.title}}</h2>
+			{% endif %}
+		{% endfor %}
+		{% for goal in secondary_goals %}
+			{% if goal.isDone %}
+				<h2 class="mx-5 text-light text-decoration-line-through text-center">{{goal.title}}</h2>
+			{% endif %}
+		{% endfor %}
+	{% else %}
+		<h3 class="text-center text-light w-100">No goals found, contant me for details at contact form provided</h3>
+	{% endif %}
 {% include "elements/forms/email_form.html"%}
 {% endblock %}

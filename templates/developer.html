@@ -4,23 +4,27 @@
 
 <h2 class="text-light text-center"> Skills</h2>
 <hr />
-<div class="row text-light">
-    {% for skill_set in skill_sets %}
-        <div class="col-sm-6 col-md-4 col-lg-3">
-            <h3 class="text-capitalize">{{skill_set.name}}</h3>
-            <ul>
-                {% for skill in skill_set.skills %}
-                    <li>{{skill}}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    {% endfor %}
-</div>
+{% if skill_sets|length > 0 %}
+    <div class="row text-light">
+        {% for skill_set in skill_sets %}
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <h3 class="text-capitalize">{{skill_set.name}}</h3>
+                <ul>
+                    {% for skill in skill_set.skills %}
+                        <li>{{skill}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+ <h3 class="text-center text-light w-100">No skills found, contact me for details at contact form provided</h3>
+{% endif %}
 <hr />
 <h2 class="text-light text-center"> Work</h2>
 <hr />
+{% if projects|length > 0 %}
 <p class="text-light text-center">This is my work gather so far in last 3 year of studies</p>
-
 <div class="row row-cols-1 row-cols-md-1 row-cols-lg-3 g-4">
     {% for project in projects %}
     <div class="col">
@@ -35,7 +39,9 @@
     </div>
     {% endfor %}
 </div>
-
+{% else %}
+ <h3 class="text-center text-light w-100">No projects found, contant me for details at contact form provided</h3>
+{% endif %}
 {% include "elements/forms/email_form.html"%}
 
 {% endblock %}

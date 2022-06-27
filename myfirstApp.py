@@ -16,7 +16,13 @@ app.secret_key = os.environ["APP_SECRET_KEY"]
 OWNER_PASSWORD = os.environ['OWNER_PASSWORD']
 @app.route("/")
 def index():
-    return render_template("index.html", projects=list(database.projects.find()), courses=list(database.studies.find()))
+    goals = list(database.dreams.find())
+    if len(goals)>0:
+        main_goals = [goal for goal in goals if goal['isMain'] and not goal['isDone']]
+        main_goals.sort(key=lambda goal: goal['no_order'])
+    else:
+        main_goals=[{'title':"Success is not final; failure is not fatal: it is the courage to continue that counts. - Winston Churchill."}]
+    return render_template("index.html", projects=list(database.projects.find()), courses=list(database.studies.find()), main_goal=main_goals[0])
 
 @app.route("/student")
 def student():

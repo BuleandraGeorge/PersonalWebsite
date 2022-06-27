@@ -2,38 +2,42 @@
 {% block page_title %}Student {% endblock %}
 {% block content %}
 <div class="text-light">
-    {% for study in studies%}
-    <div class="card text-center bg-dark text-light mb-5">
-        <div class="card-body">
-            <div class="row my-3">
-                <div class="col-8">
-                    <h5 class="card-title my-4 ">{{study.course_name}}</h5>
-                    <h5 class="my-2">Degree</h5>
-                    <p>{{study.degree}} </p>
-                    <h5>Course Period</h5>
-                    <p class="card-text">{{study.course_period}}</p>
-                    <h5>Description</h5>
-                    <p class="card-text">
-                        {{study.description}}
-                    </p>
-                    <h5>Courses</h5>
-                    {% for class in study.class %}
-                    <p class="m-0">{{class}}</p>
-                    {% endfor %}
+    {% if studies|length > 0 %}
+        {% for study in studies%}
+        <div class="card text-center bg-dark text-light mb-5">
+            <div class="card-body">
+                <div class="row my-3">
+                    <div class="col-8">
+                        <h5 class="card-title my-4 ">{{study.course_name}}</h5>
+                        <h5 class="my-2">Degree</h5>
+                        <p>{{study.degree}} </p>
+                        <h5>Course Period</h5>
+                        <p class="card-text">{{study.course_period}}</p>
+                        <h5>Description</h5>
+                        <p class="card-text">
+                            {{study.description}}
+                        </p>
+                        <h5>Courses</h5>
+                        {% for class in study.class %}
+                        <p class="m-0">{{class}}</p>
+                        {% endfor %}
                     
-                {% if study.course_diploma is defined %}
-                    <h5>Diploma</h5>
-                    <a href="{{url_for('view_file', filetype='diploma', file_id=study._id)}}" target='_blank'>See diploma</a>
-                {% endif %} 
-                </div>
-                <div class="col-4 d-flex justify-content-center">
-                    <img src="{{url_for('static', filename='images/'+study.course_picture)}}" class="img-fluid" alt="...">
-                </div>
+                    {% if study.course_diploma is defined %}
+                        <h5>Diploma</h5>
+                        <a href="{{url_for('view_file', filetype='diploma', file_id=study._id)}}" target='_blank'>See diploma</a>
+                    {% endif %} 
+                    </div>
+                    <div class="col-4 d-flex justify-content-center">
+                        <img src="{{url_for('static', filename='images/'+study.course_picture)}}" class="img-fluid" alt="...">
+                    </div>
                 
+                </div>
             </div>
         </div>
-    </div>
-    {% endfor %}
+        {% endfor %}
+    {% else %}
+         <h3 class="text-center text-light w-100">No studies found, please contant me for details at contact form provided</h3>
+    {% endif %}    
 </div>
 {% include "elements/forms/email_form.html"%}
 {% endblock %}

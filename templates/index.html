@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %} Lading Page {% endblock %}
+{% block page_title %} I would characterize my self as a {% endblock %}
 {% block content %}
 <div class="row mb-5">
     <div class="col-sm-12 col-md-4 magnify">
@@ -24,13 +25,14 @@
 </div>
 
 <p class=" fs-1 text-center text-light my-5">Work</p>
+    {% if projects|length > 0 %}
+  
    <div class="project-scroll-buttons d-sm-none d-lg-block">
          <a class="btn btn-light btn-scroll left-scroll-btn bg-dark text-light" onclick="scrolllLeft()"><i class="fa-solid fa-angle-left"></i></a>
         <a class="btn btn-light btn-scroll right-scroll-btn bg-dark text-light" onclick="scrollRight()"><i class="fa-solid fa-angle-right"></i></a>
     </div> 
     <div class="project-container mandatory-scroll-snapping my-5" id="projects">
-        {% if projects|length > 0 %}
-  
+        
         {% for project in projects %}
             <div class="item">
                 <div class="card bg-dark text-white">
@@ -49,11 +51,12 @@
             </div>
         {% endfor %}
 
-        {% else %}
-            <h3 class="text-center text-light w-100">No work could be find, contact the owner for details at the contact form provided</h3>
-        {% endif %}
+        
     </div>
- 
+ {% else %}
+            <h3 class="text-center text-light w-100">No projects found, contant me for details at contact form provided</h3>
+            <hr>
+ {% endif %}
 <p class=" fs-1 text-center text-light my-5 ">Studies</p>
 <div class="row my-5">
     {% if courses|length> 0 %}
@@ -76,13 +79,14 @@
     </div>
     {% endfor %}
     {% else %}
-    <h3 class="text-center text-light">No studies could be find, contact the owner for details at the contact form provided</h3>
+    <h3 class="text-center text-light">No studies found, please contant me for details at contact form provided</h3>
+      <hr>
     {% endif %}
 
 </div>
 
 
-<p class="fs-1 text-center text-light my-5">In five years from now I'll be a machine learning engineer </p>
+<p class="fs-1 text-center text-light my-5">{{main_goal.title}}</p>
 {% include "elements/forms/email_form.html"%}
 {% endblock %}
 {% block extra_js %}
