@@ -331,3 +331,7 @@ def contact():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('not_found_404.html'), 404
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('internal_error_500.html'), 500
