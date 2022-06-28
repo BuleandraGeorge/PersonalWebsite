@@ -23,7 +23,7 @@
                         <p class="m-0">{{class}}</p>
                         {% endfor %}
                     
-                    {% if study.course_diploma is defined %}
+                    {% if study.course_diploma!=""%}
                         <h5>Diploma</h5>
                         <a href="{{url_for('view_file', filetype='diploma', file_id=study._id)}}" target='_blank'>See diploma</a>
                     {% endif %} 

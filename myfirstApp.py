@@ -98,8 +98,9 @@ def add_course():
    newCourse['no_order'] = int(request.form['no_order'])
    picture = request.files['course_picture']
    diploma = request.files['course_diploma']
+   if diploma:
+      diploma.save(os.path.join(app.config['UPLOAD_DOC'], secure_filename(diploma.filename)))
    picture.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(picture.filename)))
-   diploma.save(os.path.join(app.config['UPLOAD_DOC'], secure_filename(diploma.filename)))
    newCourse['course_picture'] = secure_filename(picture.filename)
    newCourse['course_diploma'] = secure_filename(diploma.filename)
    database.studies.insert_one(newCourse)
