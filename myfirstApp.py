@@ -144,7 +144,6 @@ def add_goal():
 
 @app.route("/login", methods=['POST', 'GET'])
 def login():
-    print(request.cookies)
     if request.method =="POST":
         if request.form['password'] == OWNER_PASSWORD:
             user_uuid = str(uuid4())
@@ -155,7 +154,7 @@ def login():
         else:
             flash("The password is wrong")
             return render_template('login.html', wrong_password=True,)
-    if database.owner.find_one({"user_addr":str(request.remote_addr)}):
+    if database.owner.find_one({"user_uuid":session['user_uuid']}):
         flash("You are already logged in")
         return redirect('update')
     return render_template('login.html', wrong_password=False)
@@ -163,7 +162,7 @@ def login():
 @app.route("/logout", methods=['GET'])
 @isOwner(database)
 def logout():
-    database.owner.delete_many({"user_addr":str(request.remote_addr)})
+    database.owner.delete_many({"user_uuid":session['user_uuid']})
     flash("You has been logged out")
     return redirect(url_for('index'))
 
