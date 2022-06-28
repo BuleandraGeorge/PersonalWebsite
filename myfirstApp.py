@@ -1,8 +1,10 @@
 from itertools import product
-from flask import Flask, render_template, send_from_directory, redirect, request, url_for, make_response, get_template_attribute, flash
+from flask import Flask, render_template, send_from_directory, redirect, request, url_for, flash,session
 from werkzeug.utils import secure_filename
+from uuid import uuid4
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
+
 import smtplib
 from decorators import isOwner
 import os
@@ -142,9 +144,12 @@ def add_goal():
 
 @app.route("/login", methods=['POST', 'GET'])
 def login():
+    print(request.cookies)
     if request.method =="POST":
         if request.form['password'] == OWNER_PASSWORD:
-            database.owner.insert_one({"user_addr":request.remote_addr})
+            user_uuid = str(uuid4())
+            database.owner.insert_one({"user_uuid":user_uuid})
+            session['user_uuid'] = user_uuid
             flash("Welcome back owner")
             return redirect((url_for('update_view')))
         else:
