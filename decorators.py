@@ -5,7 +5,7 @@ def isOwner(database):
 	def decorator(f):
 		@wraps(f)
 		def decorated_function(*args,**kwargs):
-			if database.owner.find_one({'user_uuid':str(session['user_uuid'])}) is None:
+			if not 'user_uuid' in  session.keys() or  database.owner.find_one({'user_uuid':session.get('user_uuid', "xxxxxxxx")}) is None:
 				return redirect(url_for('login'))
 			return f(*args, **kwargs)
 		return decorated_function

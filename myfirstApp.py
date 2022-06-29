@@ -7,6 +7,7 @@ import smtplib
 from decorators import isOwner
 import os
 from flask_s3 import FlaskS3
+from my_utilities import activity_email
 
 ##APP SETTINGS
 app = Flask(__name__)
@@ -29,6 +30,7 @@ OWNER_PASSWORD = os.environ['OWNER_PASSWORD']
 
 @app.route("/")
 def index():
+    
     goals = list(database.dreams.find())
     if len(goals)>0:
         main_goals = [goal for goal in goals if goal['isMain'] and not goal['isDone']]
@@ -159,13 +161,17 @@ def login():
         if request.form['password'] == OWNER_PASSWORD:
             user_uuid = str(uuid4())
             database.owner.insert_one({"user_uuid":user_uuid})
+
             session['user_uuid'] = user_uuid
             flash("Welcome back owner")
+            message = "Somebody logged in: " + request.remote_addr
+            activity_email(message)
             return redirect((url_for('update_view')))
         else:
             flash("The password is wrong")
-            return render_template('login.html', wrong_password=True,)
-    if database.owner.find_one({"user_uuid":session['user_uuid']}):
+            return render_template('login.html', wrong_password=True)
+
+    if database.owner.find_one({"user_uuid":session.get('user_uuid', "xxxxxxxx")}):
         flash("You are already logged in")
         return redirect('update')
     return render_template('login.html', wrong_password=False)
