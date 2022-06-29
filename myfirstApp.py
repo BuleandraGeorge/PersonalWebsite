@@ -1,21 +1,32 @@
-from itertools import product
 from flask import Flask, render_template, send_from_directory, redirect, request, url_for, flash,session
 from werkzeug.utils import secure_filename
 from uuid import uuid4
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
-
 import smtplib
 from decorators import isOwner
 import os
+from flask_s3 import FlaskS3
+
+##APP SETTINGS
 app = Flask(__name__)
-app.config["MONGO_URI"] = os.environ['MONGO_URI'].format(os.environ['DB_USERNAME'],os.environ['PASSWORD'], os.environ['DATABASE_NAME'])[1:-1]
+app.secret_key = os.environ["APP_SECRET_KEY"]
 app.config['UPLOAD_FOLDER'] = './static/images'
 app.config['UPLOAD_DOC'] = './static/docs'
+
+# S3 BUCKET SETTINGS
+app.config['FLASKS3_BUCKET_NAME'] = os.environ["S3_BUCKET_NAME"]
+app.config['AWS_ACCESS_KEY_ID'] = os.environ["S3_ACCESS_KEY_ID"]
+app.config['AWS_SECRET_ACCESS_KEY'] = os.environ["S3_SECRET_KEY"]
+s3 = FlaskS3(app)
+
+#MONGODB SETTINGS
+app.config["MONGO_URI"] = os.environ['MONGO_URI'].format(os.environ['DB_USERNAME'],os.environ['PASSWORD'], os.environ['DATABASE_NAME'])[1:-1]
 mongo = PyMongo(app)
 database = mongo.db
-app.secret_key = os.environ["APP_SECRET_KEY"]
+
 OWNER_PASSWORD = os.environ['OWNER_PASSWORD']
+
 @app.route("/")
 def index():
     goals = list(database.dreams.find())
