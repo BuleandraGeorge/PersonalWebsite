@@ -5,6 +5,7 @@ from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 import os
 from utilities import activity_email
+from decorators import isOwner
 
 ##APP SETTINGS
 app = Flask(__name__,)
@@ -64,7 +65,7 @@ def view_file(filetype,file_id):
         filename= database.studies.find_one_or_404({"_id":ObjectId(file_id)})['course_diploma']
     else:
         return 404
-    return send_from_directory(path=flask_s3.url_for('static', filename="docs/"+filename))
+    return send_from_directory(app.config["UPLOAD_DOC"], filename)
 
 @app.route("/project/<string:project_id>")
 def project_view(project_id):
