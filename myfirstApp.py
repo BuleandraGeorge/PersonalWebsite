@@ -10,8 +10,8 @@ from decorators import isOwner
 ##APP SETTINGS
 app = Flask(__name__,)
 app.secret_key = os.environ["APP_SECRET_KEY"]
-app.config['UPLOAD_FOLDER'] = 'static/images/'
-app.config['UPLOAD_DOC'] = 'static/docs/'
+app.config['UPLOAD_FOLDER'] = './static/images'
+app.config['UPLOAD_DOC'] = './static/docs'
 
 #MONGODB SETTINGS
 app.config["MONGO_URI"] = os.environ['MONGO_URI'].format(os.environ['DB_USERNAME'],os.environ['PASSWORD'], os.environ['DATABASE_NAME'])[1:-1]
@@ -115,7 +115,7 @@ def add_project():
    for picture in pictures:
        filename = secure_filename(picture.filename)
        project['project_pictures'].append(secure_filename(picture.filename))
-       picture.save(flask_s3.url_for('static', filename="/images"), filename)
+       picture.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
    database.projects.insert_one(project)
    flash('{} has been added at collection'.format(project['project_name']))
    return redirect(url_for('update_view'))
@@ -129,8 +129,8 @@ def add_course():
    picture = request.files['course_picture']
    diploma = request.files['course_diploma']
    if diploma:
-      b3.upload_file(secure_filename(diploma.filename), app.config['FLASKS3_BUCKET_NAME'], 'docs')
-   s3.boto3.upload_file(secure_filename(pictures.filename), app.config['FLASKS3_BUCKET_NAME'], 'images')
+      diploma.save(os.path.join(app.config['UPLOAD_DOC'], secure_filename(diploma.filename)))
+   picture.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(picture.filename)))
    newCourse['course_picture'] = secure_filename(picture.filename)
    newCourse['course_diploma'] = secure_filename(diploma.filename)
    database.studies.insert_one(newCourse)
@@ -284,20 +284,26 @@ def edit(asset, asset_id):
            newData['no_order'] = int(newData['no_order'])
            picture = request.files['course_picture']
            if picture.filename!="":
-               delete_file_at_s3(app, course['course_picture'], "UPLOAD_DOC")
-               result = upload_file_to_s3(app,'UPLOAD_DOC', picture)
-               newData['course_picture'] = secure_filename(course['course_picture'])
-               if not result['success']:
-                  newData['course_picture'] = ""
-                  flash(result['message'])
+               try:
+                    os.remove(app.config['UPLOAD_FOLDER']+"/"+ course['course_picture'])
+               except:
+                    pass
+               try:
+                    picture.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(picture.filename)))
+                    newData['course_picture'] = secure_filename(picture.filename)
+               except:
+                    pass
            diploma = request.files['course_diploma']
            if diploma.filename!="":
-               delete_file_at_s3(app, course['course_diploma'], "UPLOAD_DOC")
-               result = upload_file_to_s3(app,'UPLOAD_DOC', diploma)
-               newData['course_diploma'] = secure_filename(diploma.filename)
-               if not result['success']:
-                  newData['course_diploma'] = ""
-                  flash(result['message'])
+               try:
+                    os.remove(app.config['UPLOAD_DOC']+"/"+ course['course_diploma'])
+               except:
+                    pass
+               try:
+                    diploma.save(os.path.join(app.config['UPLOAD_DOC'], secure_filename(diploma.filename)))  
+                    newData['course_diploma'] = secure_filename(diploma.filename)
+               except:
+                    pass
            flash("Course has been updated")
            database.studies.update_one({"_id":ObjectId(asset_id)},  {"$set":newData})
            return redirect(url_for('student'))
