@@ -4,7 +4,7 @@ from uuid import uuid4
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 import os
-from utilities import activity_email,
+from utilities import activity_email
 
 ##APP SETTINGS
 app = Flask(__name__,)
