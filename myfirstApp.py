@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_file, redirect, request, url_for, flash,session
+from flask import Flask, render_template, send_from_directory, redirect, request, url_for, flash,session
 from werkzeug.utils import secure_filename
 from uuid import uuid4
 from flask_pymongo import PyMongo
@@ -6,11 +6,12 @@ from bson.objectid import ObjectId
 import smtplib
 from decorators import isOwner
 import os
+import flask_s3
 from flask_s3 import FlaskS3
 from utilities import activity_email, upload_file_to_s3, delete_file_at_s3
 
 ##APP SETTINGS
-app = Flask(__name__)
+app = Flask(__name__,static_url_path='https://georgebuleandra-website.s3.amazonaws.com/')
 app.secret_key = os.environ["APP_SECRET_KEY"]
 app.config['UPLOAD_FOLDER'] = 'static/images/'
 app.config['UPLOAD_DOC'] = 'static/docs/'
@@ -30,7 +31,7 @@ OWNER_PASSWORD = os.environ['OWNER_PASSWORD']
 
 @app.route("/")
 def index():
-    
+    print(flask_s3.url_for('static', filename="docs/DMU-logo.png"))
     goals = list(database.dreams.find())
     if len(goals)>0:
         main_goals = [goal for goal in goals if goal['isMain'] and not goal['isDone']]
@@ -74,7 +75,7 @@ def view_file(filetype,file_id):
         filename= database.studies.find_one_or_404({"_id":ObjectId(file_id)})['course_diploma']
     else:
         return 404
-    return send_file(url_for('static', filename='docs/'+filename))
+    return send_from_directory(path=flask_s3.url_for('static', filename="docs/"+filename))
 
 @app.route("/project/<string:project_id>")
 def project_view(project_id):
@@ -269,15 +270,12 @@ def edit(asset, asset_id):
            newData['no_order'] = int(newData['no_order'])
            picture = request.files['course_picture']
            if picture.filename!="":
-               try:
-                    os.remove(app.config['UPLOAD_FOLDER']+"/"+ course['course_picture'])
-               except:
-                    pass
-               try:
-                    picture.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(picture.filename)))
-                    newData['course_picture'] = secure_filename(picture.filename)
-               except:
-                    pass
+               delete_file_at_s3(app, course['course_picture'], "UPLOAD_DOC")
+               result = upload_file_to_s3(app,'UPLOAD_DOC', picture)
+               newData['course_picture'] = secure_filename(course['course_picture'])
+               if not result['success']:
+                  newData['course_picture'] = ""
+                  flash(result['message'])
            diploma = request.files['course_diploma']
            if diploma.filename!="":
                delete_file_at_s3(app, course['course_diploma'], "UPLOAD_DOC")
