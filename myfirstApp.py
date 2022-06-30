@@ -94,3 +94,249 @@ def page_not_found(e):
 @app.errorhandler(500)
 def internal_server_error(e):
     return render_template('internal_error_500.html'), 500
+
+############ AVAILABLE ONLY IN DEVELOPEMENT
+@app.route("/update",methods=["GET"])
+@isOwner(database)
+def update_view():
+    return render_template("update.html", skills=list(database.skills.find()))
+
+@app.route("/add_project",methods=["POST"])
+@isOwner(database)
+def add_project():
+   project =request.form.to_dict()
+   project['features'] = request.form.getlist('features')
+   project['technologies'] = request.form.getlist('technologies')
+   project['others_project'] = request.form.getlist('others_project')
+   project['project_pictures'] = list()
+   project['no_order'] = int(request.form['no_order'])
+   pictures = request.files.getlist('project_pictures')
+   for picture in pictures:
+       filename = secure_filename(picture.filename)
+       project['project_pictures'].append(secure_filename(picture.filename))
+       picture.save(flask_s3.url_for('static', filename="/images"), filename)
+   database.projects.insert_one(project)
+   flash('{} has been added at collection'.format(project['project_name']))
+   return redirect(url_for('update_view'))
+
+@app.route("/add_course",methods=["POST"])
+@isOwner(database)
+def add_course():
+   newCourse = request.form.to_dict()
+   newCourse['class'] = request.form.getlist('class')
+   newCourse['no_order'] = int(request.form['no_order'])
+   picture = request.files['course_picture']
+   diploma = request.files['course_diploma']
+   if diploma:
+      b3.upload_file(secure_filename(diploma.filename), app.config['FLASKS3_BUCKET_NAME'], 'docs')
+   s3.boto3.upload_file(secure_filename(pictures.filename), app.config['FLASKS3_BUCKET_NAME'], 'images')
+   newCourse['course_picture'] = secure_filename(picture.filename)
+   newCourse['course_diploma'] = secure_filename(diploma.filename)
+   database.studies.insert_one(newCourse)
+   flash("{} has been added at collection ".format(newCourse['course_name']))
+   return redirect(url_for('update_view'))
+
+@app.route("/add_skill",methods=["POST"])
+@isOwner(database)
+def add_skill():
+   newSkill = request.form.to_dict()
+   newSkill['skill'] = request.form.getlist('skill')
+   skill_type = database.skills.find_one({'name':newSkill['skill_type']})
+   if skill_type:
+       skills = skill_type['skills']
+       skills = skills + newSkill['skill']
+       myquery = {"skills": skill_type['skills']}
+       newvalues = { "$set":{'skills':skills} }
+       database.skills.update_one(myquery, newvalues )
+       flash('{} has been updated'.format(skill_type['name']))
+   else:
+       newEntry ={
+           "name":newSkill['skill_type'],
+           "skills":newSkill['skill']
+           }
+       database.skills.insert_one(newEntry)
+       flash('{} has been added at collection'.format(newEntry['name']))
+   return redirect(url_for('update_view'))
+
+@app.route("/add_goal",methods=["POST"])
+@isOwner(database)
+def add_goal():
+   newGoal = request.form.to_dict()
+   newGoal['isMain'] = True if 'isMain' in request.form.to_dict().keys() else False
+   newGoal['isDone'] = True if 'isDone' in request.form.to_dict().keys() else False
+   newGoal['no_order'] = int(newGoal['no_order'])
+   database.dreams.insert_one(newGoal)
+   flash('{} has been added at collection'.format(newGoal['title']))
+   return redirect(url_for('update_view'))
+
+@app.route("/login", methods=['POST', 'GET'])
+def login():
+    if request.method =="POST":
+        if request.form['password'] == OWNER_PASSWORD:
+            user_uuid = str(uuid4())
+            database.owner.insert_one({"user_uuid":user_uuid})
+
+            session['user_uuid'] = user_uuid
+            flash("Welcome back owner")
+            message = "Somebody logged in: " + request.remote_addr
+            activity_email(message)
+            return redirect((url_for('update_view')))
+        else:
+            flash("The password is wrong")
+            return render_template('login.html', wrong_password=True)
+
+    if database.owner.find_one({"user_uuid":session.get('user_uuid', "xxxxxxxx")}):
+        flash("You are already logged in")
+        return redirect('update')
+    return render_template('login.html', wrong_password=False)
+
+@app.route("/logout", methods=['GET'])
+@isOwner(database)
+def logout():
+    database.owner.delete_many({"user_uuid":session['user_uuid']})
+    flash("You has been logged out")
+    return redirect(url_for('index'))
+
+@app.route('/list')
+@isOwner(database)
+def list_assets():
+    projects = list(database.projects.find())
+    courses = list(database.studies.find())
+    skill_sets = list(database.skills.find())
+    goals = list(database.dreams.find())
+    return render_template('list.html', projects=projects,courses=courses, skill_sets=skill_sets, goals=goals)
+
+
+@app.route('/delete/<asset>/<asset_id>')
+@isOwner(database)
+def delete(asset, asset_id):
+    if asset=="project":
+        proj_pictures = database.projects.find_one({'_id':ObjectId(asset_id)})['project_pictures']
+        for pic in proj_pictures:
+           try:     
+               os.remove(app.config['UPLOAD_FOLDER']+"/"+pic)
+           except:
+               pass
+        flash("Project has been removed")
+        database.projects.delete_one({'_id':ObjectId(asset_id)})
+    elif asset =="course":
+        course_picture = database.studies.find_one({'_id':ObjectId(asset_id)})['course_picture']
+        course_diploma = database.studies.find_one({'_id':ObjectId(asset_id)})['course_diploma']
+        try:     
+            os.remove(app.config['UPLOAD_FOLDER']+"/"+course_picture)
+        except:
+            pass
+        try:     
+            os.remove(app.config['UPLOAD_DOC']+"/"+course_diploma)
+        except:
+            pass
+        flash("Course has been removed")
+        database.studies.delete_one({'_id':ObjectId(asset_id)})
+    elif asset == "skill_set":
+        flash("Skill_set has been removed")
+        database.skills.delete_one({'_id':ObjectId(asset_id)})
+    elif asset =="goal":
+        flash("Goal has been removed")
+        database.dreams.delete_one({'_id':ObjectId(asset_id)})
+    return redirect(url_for('list_assets'))
+
+@app.route('/edit/<asset>/<asset_id>', methods=['GET','POST'])
+@isOwner(database)
+def edit(asset, asset_id):
+    if asset=="project":
+        if request.method=="POST":
+            newData = request.form.to_dict()
+            newData['features'] = request.form.getlist('features')
+            newData['technologies'] = request.form.getlist('technologies')
+            newData['others_project'] = request.form.getlist('others_project')
+            newData['no_order'] = int(newData['no_order'])
+            pictures = request.files.getlist('project_pictures')
+            newPictures = list()
+            deletePic = list()
+            currentPictures = database.projects.find_one({'_id':ObjectId(asset_id)})['project_pictures']
+            for picture in pictures: # if so add them in the storage
+                try:
+                    picture.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(picture.filename)))
+                    newPictures.append(secure_filename(picture.filename))
+                except:
+                    pass
+            if "delete_picture" in newData.keys(): # some of the current pic has been deleted
+                deletePic = request.form.getlist('delete_picture')
+                for pic in deletePic: # if so remove them from storage
+                    try:
+                        os.remove(app.config['UPLOAD_FOLDER']+"/"+pic)
+                    except:
+                        pass
+                    currentPictures.remove(pic) # remove them from list
+                newData.pop('delete_picture')
+            newData['project_pictures'] = newPictures + currentPictures # new set of pictures equals the union between new and current pictures left
+            database.projects.update_one({"_id":ObjectId(asset_id)},  {"$set":newData})
+            flash("Project has been updated")
+            return redirect(url_for('project_view', project_id = asset_id ))
+        project = database.projects.find_one({'_id':ObjectId(asset_id)})
+        return render_template('edit.html', form = "elements/forms/project_form.html" , form_values = project)
+    elif asset =="course":
+        course = database.studies.find_one({'_id':ObjectId(asset_id)})
+        if request.method=="POST":
+           newData = request.form.to_dict()
+           newData['class'] = request.form.getlist('class')
+           newData['no_order'] = int(newData['no_order'])
+           picture = request.files['course_picture']
+           if picture.filename!="":
+               delete_file_at_s3(app, course['course_picture'], "UPLOAD_DOC")
+               result = upload_file_to_s3(app,'UPLOAD_DOC', picture)
+               newData['course_picture'] = secure_filename(course['course_picture'])
+               if not result['success']:
+                  newData['course_picture'] = ""
+                  flash(result['message'])
+           diploma = request.files['course_diploma']
+           if diploma.filename!="":
+               delete_file_at_s3(app, course['course_diploma'], "UPLOAD_DOC")
+               result = upload_file_to_s3(app,'UPLOAD_DOC', diploma)
+               newData['course_diploma'] = secure_filename(diploma.filename)
+               if not result['success']:
+                  newData['course_diploma'] = ""
+                  flash(result['message'])
+           flash("Course has been updated")
+           database.studies.update_one({"_id":ObjectId(asset_id)},  {"$set":newData})
+           return redirect(url_for('student'))
+        return render_template('edit.html', form = 'elements/forms/course_form.html', form_values = course)
+    elif asset == "skill_set":
+        skill_set = database.skills.find_one({'_id':ObjectId(asset_id)})
+        if request.method=="POST":
+           newData = request.form.to_dict()
+           newData['skills'] = request.form.getlist('skill')
+           database.skills.update_one({'_id':ObjectId(asset_id)},{'$set':newData})
+           flash("Skill set has been updated")
+           return redirect(url_for('developer'))
+        return render_template('edit.html', form = 'elements/forms/skill_form.html', form_values = skill_set)
+    elif asset =="goal":
+        goal = database.dreams.find_one({'_id':ObjectId(asset_id)})
+        if request.method=="POST":
+           newData = request.form.to_dict()
+           newData['isMain'] = True if 'isMain' in request.form.to_dict().keys() else False
+           newData['isDone'] = True if 'isDone' in request.form.to_dict().keys() else False
+           newData['no_order'] = int(newData['no_order'])
+           database.dreams.update_one({'_id':ObjectId(asset_id)},{'$set':newData})
+           flash("Goal has been updated")
+           return redirect(url_for('dreamer'))
+        return render_template('edit.html', form = 'elements/forms/goal_form.html', form_values = goal)
+    elif asset =="cv":
+        wrong_file_type = False
+        if request.method=="POST":
+           cv= request.files['cv']
+           if cv.filename.endswith('.pdf'):
+                currCv = database.cvs.find_one();
+                try:
+                    os.remove(app.config['UPLOAD_DOC']+"/"+ currCv['filename'])
+                except:
+                    pass
+                cv.save(os.path.join(app.config['UPLOAD_DOC'], secure_filename(cv.filename)))
+                database.cvs.update_one({},{"$set":{'filename':secure_filename(cv.filename)}})
+                flash("The cv has been updated")
+                return redirect(url_for('index'))
+           else:
+                flash("Wrong file type, the file has to be pdf");
+                return redirect(url_for('update_view'))
+        return redirect(url_for('update_view'))
+    return redirect(url_for('list_assets'))
