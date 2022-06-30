@@ -6,7 +6,9 @@ def isOwner(database):
 	def decorator(f):
 		@wraps(f)
 		def decorated_function(*args,**kwargs):
-			if os.environ["FLASK_ENV"]!="development" or not 'user_uuid' in  session.keys() or  database.owner.find_one({'user_uuid':session.get('user_uuid', "xxxxxxxx")}) is None:
+			if os.environ["FLASK_ENV"]!="development":
+				return 404
+			if not 'user_uuid' in  session.keys() or  database.owner.find_one({'user_uuid':session.get('user_uuid', "xxxxxxxx")}) is None:
 				return redirect(url_for('login'))
 			return f(*args, **kwargs)
 		return decorated_function
