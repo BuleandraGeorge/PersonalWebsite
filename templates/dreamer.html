@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block title %} About {% endblock %}
-{% block page_title %}Dreamer  {% endblock %}
+{% block page_title %}Visionary  {% endblock %}
 {% block content %}
-	<h4 class="text-center text-light">Long term goals </h4>
+	<h4 class="text-center text-light">Moto </h4>
 	{% if main_goals|length > 0%}
 		{% for goal in main_goals %}
 			{% if not goal.isDone %}
@@ -17,7 +17,7 @@
 	{% else %}
 		<h3 class="text-center text-light w-100">No goals found, contant me for details at contact form provided</h3>
 	{% endif %}
-	<h4 class="text-center text-light mt-5">Short term goals </h4>
+	<h4 class="text-center text-light mt-5">About </h4>
 	{% if secondary_goals %}
 		{% for goal in secondary_goals %}
 			{% if not goal.isDone %}

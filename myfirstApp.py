@@ -43,7 +43,7 @@ def developer():
     skills=list(database.skills.find())
     return render_template("developer.html", projects = projects, skill_sets=skills);
 
-@app.route("/dreamer")
+@app.route("/about")
 def dreamer():
     goals = list(database.dreams.find())
     main_goals = []
