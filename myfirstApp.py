@@ -6,7 +6,7 @@ from bson.objectid import ObjectId
 import os
 from utilities import activity_email
 from decorators import isOwner
-
+from flask_s3 import FlaskS3
 ##APP SETTINGS
 app = Flask(__name__,)
 app.secret_key = os.environ["APP_SECRET_KEY"]
@@ -18,7 +18,16 @@ app.config["MONGO_URI"] = os.environ['MONGO_URI'].format(os.environ['DB_USERNAME
 mongo = PyMongo(app)
 database = mongo.db
 
+#AWS 
+
+app.config["FLASKS3_BUCKET_NAME"] = os.environ["S3_BUCKET_NAME"]
+app.config['AWS_ACCESS_KEY_ID'] = os.environ["S3_ACCESS_KEY_ID"]
+app.config['AWS_SECRET_ACCESS_KEY'] = os.environ["S3_SECRET_KEY"]
+s3 = FlaskS3(app)
+
+
 OWNER_PASSWORD = os.environ['OWNER_PASSWORD']
+
 
 @app.route("/")
 def index():
