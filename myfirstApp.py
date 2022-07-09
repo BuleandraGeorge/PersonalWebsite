@@ -1,12 +1,12 @@
-from flask import Flask, render_template, send_from_directory, redirect, request, url_for, flash,session
+from flask import Flask, render_template, send_file, redirect, request, url_for, flash,session
 from werkzeug.utils import secure_filename
 from uuid import uuid4
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 import os
-from utilities import activity_email
+from utilities import activity_email, getObject
 from decorators import isOwner
-from flask_s3 import FlaskS3
+from flask_s3 import FlaskS3, url_for
 ##APP SETTINGS
 app = Flask(__name__,)
 app.secret_key = os.environ["APP_SECRET_KEY"]
@@ -74,7 +74,11 @@ def view_file(filetype,file_id):
         filename= database.studies.find_one_or_404({"_id":ObjectId(file_id)})['course_diploma']
     else:
         return 404
-    return send_from_directory(app.config["UPLOAD_DOC"], filename)
+    flash('static/docs/'+filename)
+    print(getObject(app, 'static/docs/'+filename))
+    return send_file(getObject(app, 'static/docs/'+filename)["Body"], mimetype="application/pdf")
+
+
 
 @app.route("/project/<string:project_id>")
 def project_view(project_id):
