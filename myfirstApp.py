@@ -141,8 +141,8 @@ def add_course():
    picture = request.files['course_picture']
    diploma = request.files['course_diploma']
    if diploma:
-      diploma.save(os.path.join(app.config['UPLOAD_DOC'], secure_filename(diploma.filename)))
-   picture.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(picture.filename)))
+      upload_file_to_s3(app,'UPLOAD_DOC',diploma)
+   upload_file_to_s3(app,'UPLOAD_FOLDER',picture)
    newCourse['course_picture'] = secure_filename(picture.filename)
    newCourse['course_diploma'] = secure_filename(diploma.filename)
    database.studies.insert_one(newCourse)
@@ -232,14 +232,8 @@ def delete(asset, asset_id):
     elif asset =="course":
         course_picture = database.studies.find_one({'_id':ObjectId(asset_id)})['course_picture']
         course_diploma = database.studies.find_one({'_id':ObjectId(asset_id)})['course_diploma']
-        try:     
-            os.remove(app.config['UPLOAD_FOLDER']+"/"+course_picture)
-        except:
-            pass
-        try:     
-            os.remove(app.config['UPLOAD_DOC']+"/"+course_diploma)
-        except:
-            pass
+        delete_file_at_s3(app,course_diploma,'UPLOAD_DOC')
+        delete_file_at_s3(app,course_picture,'UPLOAD_FOLDER')
         flash("Course has been removed")
         database.studies.delete_one({'_id':ObjectId(asset_id)})
     elif asset == "skill_set":
@@ -287,26 +281,14 @@ def edit(asset, asset_id):
            newData['no_order'] = int(newData['no_order'])
            picture = request.files['course_picture']
            if picture.filename!="":
-               try:
-                    os.remove(app.config['UPLOAD_FOLDER']+"/"+ course['course_picture'])
-               except:
-                    pass
-               try:
-                    picture.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(picture.filename)))
-                    newData['course_picture'] = secure_filename(picture.filename)
-               except:
-                    pass
+               delete_file_at_s3(app,course['course_picture'],'UPLOAD_FOLDER')
+               upload_file_to_s3(app,'UPLOAD_FOLDER',picture)
+               newData['course_picture'] = secure_filename(picture.filename)
            diploma = request.files['course_diploma']
            if diploma.filename!="":
-               try:
-                    os.remove(app.config['UPLOAD_DOC']+"/"+ course['course_diploma'])
-               except:
-                    pass
-               try:
-                    diploma.save(os.path.join(app.config['UPLOAD_DOC'], secure_filename(diploma.filename)))  
-                    newData['course_diploma'] = secure_filename(diploma.filename)
-               except:
-                    pass
+               delete_file_at_s3(app,course['course_diploma'],'UPLOAD_DOC')
+               upload_file_to_s3(app,'UPLOAD_DOC',diploma)
+               newData['course_diploma'] = secure_filename(diploma.filename)
            flash("Course has been updated")
            database.studies.update_one({"_id":ObjectId(asset_id)},  {"$set":newData})
            return redirect(url_for('student'))
