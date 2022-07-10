@@ -226,10 +226,7 @@ def delete(asset, asset_id):
     if asset=="project":
         proj_pictures = database.projects.find_one({'_id':ObjectId(asset_id)})['project_pictures']
         for pic in proj_pictures:
-           try:     
-               os.remove(app.config['UPLOAD_FOLDER']+"/"+pic)
-           except:
-               pass
+            delete_file_at_s3(app,pic,"UPLOAD_FOLDER")
         flash("Project has been removed")
         database.projects.delete_one({'_id':ObjectId(asset_id)})
     elif asset =="course":
@@ -268,11 +265,8 @@ def edit(asset, asset_id):
             deletePic = list()
             currentPictures = database.projects.find_one({'_id':ObjectId(asset_id)})['project_pictures']
             for picture in pictures: # if so add them in the storage
-                try:
-                    upload_file_to_s3(app,'UPLOAD_FOLDER',picture)
-                    newPictures.append(secure_filename(picture.filename))
-                except:
-                    pass
+                upload_file_to_s3(app,'UPLOAD_FOLDER',picture)
+                newPictures.append(secure_filename(picture.filename))
             if "delete_picture" in newData.keys(): # some of the current pic has been deleted
                 deletePic = request.form.getlist('delete_picture')
                 for pic in deletePic: # if so remove them from storage
