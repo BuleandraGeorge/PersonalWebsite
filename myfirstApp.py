@@ -319,11 +319,8 @@ def edit(asset, asset_id):
            cv= request.files['cv']
            if cv.filename.endswith('.pdf'):
                 currCv = database.cvs.find_one();
-                try:
-                    os.remove(app.config['UPLOAD_DOC']+"/"+ currCv['filename'])
-                except:
-                    pass
-                cv.save(os.path.join(app.config['UPLOAD_DOC'], secure_filename(cv.filename)))
+                delete_file_at_s3(app,currCv['filename'],'UPLOAD_DOC')
+                upload_file_to_s3(app,'UPLOAD_FOLDER',cv)
                 database.cvs.update_one({},{"$set":{'filename':secure_filename(cv.filename)}})
                 flash("The cv has been updated")
                 return redirect(url_for('index'))
