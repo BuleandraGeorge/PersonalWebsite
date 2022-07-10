@@ -4,14 +4,14 @@ from uuid import uuid4
 from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 import os
-from utilities import activity_email, getObject
+from utilities import *
 from decorators import isOwner
 from flask_s3 import FlaskS3, url_for
 ##APP SETTINGS
 app = Flask(__name__,)
 app.secret_key = os.environ["APP_SECRET_KEY"]
-app.config['UPLOAD_FOLDER'] = './static/images'
-app.config['UPLOAD_DOC'] = './static/docs'
+app.config['UPLOAD_FOLDER'] = 'static/images/'
+app.config['UPLOAD_DOC'] = 'static/docs/'
 
 #MONGODB SETTINGS
 app.config["MONGO_URI"] = os.environ['MONGO_URI'].format(os.environ['DB_USERNAME'],os.environ['PASSWORD'], os.environ['DATABASE_NAME'])[1:-1]
@@ -75,7 +75,6 @@ def view_file(filetype,file_id):
     else:
         return 404
     flash('static/docs/'+filename)
-    print(getObject(app, 'static/docs/'+filename))
     return send_file(getObject(app, 'static/docs/'+filename)["Body"], mimetype="application/pdf")
 
 
@@ -128,7 +127,7 @@ def add_project():
    for picture in pictures:
        filename = secure_filename(picture.filename)
        project['project_pictures'].append(secure_filename(picture.filename))
-       picture.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+       upload_file_to_s3(app,'UPLOAD_FOLDER',picture)
    database.projects.insert_one(project)
    flash('{} has been added at collection'.format(project['project_name']))
    return redirect(url_for('update_view'))
@@ -270,17 +269,14 @@ def edit(asset, asset_id):
             currentPictures = database.projects.find_one({'_id':ObjectId(asset_id)})['project_pictures']
             for picture in pictures: # if so add them in the storage
                 try:
-                    picture.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(picture.filename)))
+                    upload_file_to_s3(app,'UPLOAD_FOLDER',picture)
                     newPictures.append(secure_filename(picture.filename))
                 except:
                     pass
             if "delete_picture" in newData.keys(): # some of the current pic has been deleted
                 deletePic = request.form.getlist('delete_picture')
                 for pic in deletePic: # if so remove them from storage
-                    try:
-                        os.remove(app.config['UPLOAD_FOLDER']+"/"+pic)
-                    except:
-                        pass
+                    delete_file_at_s3(app,pic,"UPLOAD_FOLDER")
                     currentPictures.remove(pic) # remove them from list
                 newData.pop('delete_picture')
             newData['project_pictures'] = newPictures + currentPictures # new set of pictures equals the union between new and current pictures left
