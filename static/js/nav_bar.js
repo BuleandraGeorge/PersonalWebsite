@@ -19,6 +19,7 @@ function spypage() {
     let anchorList = getOptionList();
     anchorList.forEach(resetActive)
     let path = window.location.pathname;
+    console.log(path)
     if (path == "/") {
         anchorList[0].classList.add("active");
         return 0
@@ -31,7 +32,7 @@ function spypage() {
         anchorList[2].classList.add("active");
         return 0
     }
-    if (path == "/dreamer") {
+    if (path == "/about") {
         anchorList[3].classList.add("active");
         return 0
     }
