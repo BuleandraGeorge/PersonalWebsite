@@ -74,7 +74,6 @@ def view_file(filetype,file_id):
         filename= database.studies.find_one_or_404({"_id":ObjectId(file_id)})['course_diploma']
     else:
         return 404
-    flash('static/docs/'+filename)
     return send_file(getObject(app, 'static/docs/'+filename)["Body"], mimetype="application/pdf")
 
 
