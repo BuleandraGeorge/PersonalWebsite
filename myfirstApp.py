@@ -257,9 +257,10 @@ def edit(asset, asset_id):
             newPictures = list()
             deletePic = list()
             currentPictures = database.projects.find_one({'_id':ObjectId(asset_id)})['project_pictures']
-            for picture in pictures: # if so add them in the storage
-                upload_file_to_s3(app,'UPLOAD_FOLDER',picture)
-                newPictures.append(secure_filename(picture.filename))
+            for picture in pictures:
+                if picture.filename!="":
+                    upload_file_to_s3(app,'UPLOAD_FOLDER',picture)
+                    newPictures.append(secure_filename(picture.filename))
             if "delete_picture" in newData.keys(): # some of the current pic has been deleted
                 deletePic = request.form.getlist('delete_picture')
                 for pic in deletePic: # if so remove them from storage

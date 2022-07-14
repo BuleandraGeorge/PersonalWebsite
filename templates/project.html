@@ -8,11 +8,11 @@
 
             {% if loop.first %}
                 <div class="carousel-item active" data-bs-interval="10000">
-                    <img src="{{url_for('static', filename='images/'+image)}}" class="d-block w-100" alt="project_picture">
+                    <img src="{{url_for('static', filename='images/'+image)}}" class="d-block w-100" alt="{{image}}">
                 </div>
             {% else %}
                 <div class="carousel-item" data-bs-interval="10000">
-                    <img src="{{url_for('static', filename='images/'+image)}}" class="d-block w-100" alt="project_picture">
+                    <img src="{{url_for('static', filename='images/'+image)}}" class="d-block w-100" alt="{{image}}e">
                 </div>
             {% endif %}
         {% endfor %}
