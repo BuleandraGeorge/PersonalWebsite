@@ -36,7 +36,6 @@ def upload_file_to_s3(app,bucket_directory,file_object):
                      }
         )
     except Exception as e:
-        print(e)
         return {"success":False, 'message':"The files couldn't be uploaded"}
     return {"success":True, 'message':"The file has been uploaded with success"}
 
